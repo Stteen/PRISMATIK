@@ -1,7 +1,5 @@
 <x-layout>
 
-
-
     <div class="content-page">
      <div class="container-fluid">
         <div class="row">
