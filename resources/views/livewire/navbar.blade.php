@@ -1,7 +1,7 @@
 <div>
 <div class="iq-sidebar  sidebar-default ">
           <div class="iq-sidebar-logo d-flex  align-items-center justify-content-between">
-              <a href="#" class="brand-logo">
+              <a href="{{route('welcome')}}" class="brand-logo">
                 <img class="logo-abbr" src="../images/prisma.png" alt="">
             </a>
               <div class="iq-menu-bt-sidebar ml-0">
