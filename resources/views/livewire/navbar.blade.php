@@ -1,13 +1,13 @@
 <div>
-<div class="iq-sidebar  sidebar-default ">
-          <div class="iq-sidebar-logo d-flex  align-items-center justify-content-between">
-              <a href="{{route('welcome')}}" class="brand-logo">
-                <img class="logo-abbr" src="../images/prisma.png" alt="">
-            </a>
-              <div class="iq-menu-bt-sidebar ml-0">
-                  <i class="las la-bars wrapper-menu"></i>
-              </div>
+    <div class="iq-sidebar  sidebar-default ">
+        <div class="iq-sidebar-logo d-flex  align-items-center justify-content-between">
+            <a href="{{route('welcome')}}" class="brand-logo">
+              <img class="logo-abbr" src="../images/prisma.png" alt="">
+          </a>
+          <div class="iq-menu-bt-sidebar ml-0">
+              <i class="las la-bars wrapper-menu"></i>
           </div>
+        </div>
           <div class="data-scrollbar" data-scroll="1">
               <nav class="iq-sidebar-menu">
                   <ul id="iq-sidebar-toggle" class="iq-menu">
@@ -126,7 +126,7 @@
                               </svg>
                             <span class="ml-4">Cerrar Sesión</span>
                         </a>
-                    </li>       
+                    </li>
                   </ul>
               </nav>
               <div id="sidebar-bottom" class="position-relative sidebar-bottom">
@@ -149,7 +149,7 @@
                       <a href="index.html" class="header-logo">
                           <img src="../images/logo.png" class="img-fluid rounded-normal" alt="logo">
                           <h5 class="logo-title ml-3">POSDash</h5>
-      
+
                       </a>
                   </div>
                   <div class="iq-search-bar device-search">
@@ -227,7 +227,7 @@
                                                   </div>
                                               </div>
                                               <div class="px-3 pt-0 pb-0 sub-card">
-                                                 
+
                                                   <a href="#" class="iq-sub-card">
                                                       <div class="media align-items-center cust-card py-3">
                                                           <div class="">
