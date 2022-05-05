@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ asset('/assets/css/backend-v=1.0.0.css') }}" />
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('/@fortawesome/fontawesome-free/css/all.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('/assets/line-awesome/dist/line-awesome/css/line-awesome.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('line-awesome/dist/line-awesome/css/line-awesome.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('/assets/remixicon/fonts/remixicon.css') }}" />
 
 
@@ -29,6 +29,7 @@
 <!-- loader END -->
 
 <body>
+ 
 
     @livewire('navbar')
 
