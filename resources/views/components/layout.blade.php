@@ -3,14 +3,14 @@
 
 <head>
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ asset('/images/favicon.ico') }}" />
+    <link rel="shortcut icon" href="{{ asset('/assets/images/favicon.ico') }}" />
     <!-- Hoja de estilos -->
-    <link rel="stylesheet" href="{{ asset('/css/backend-plugin.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('/css/backend-v=1.0.0.css') }}" />
+    <link rel="stylesheet" href="{{ asset('/assets/css/backend-plugin.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('/assets/css/backend-v=1.0.0.css') }}" />
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('/@fortawesome/fontawesome-free/css/all.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('/line-awesome/dist/line-awesome/css/line-awesome.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('/remixicon/fonts/remixicon.css') }}" />
+    <link rel="stylesheet" href="{{ asset('/assets/line-awesome/dist/line-awesome/css/line-awesome.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('/assets/remixicon/fonts/remixicon.css') }}" />
 
 
     <meta charset="utf-8">
@@ -62,21 +62,22 @@
     </div>
 </div>
 </footer>
-@livewireScripts
+
 <!-- Backend Bundle JavaScript -->
-<script src="{{ asset('/js/backend-bundle.min.js') }}"></script>
+<script src="{{ asset('/assets/js/backend-bundle.min.js') }}"></script>
 
 <!-- Table Treeview JavaScript -->
-<script src="{{ asset('/js/table-treeview.js') }}"></script>
+<script src="{{ asset('/assets/js/table-treeview.js') }}"></script>
 
 <!-- Chart Custom JavaScript -->
-<script src="{{ asset('/js/customizer.js') }}"></script>
+<script src="{{ asset('/assets/js/customizer.js') }}"></script>
 
 <!-- Chart Custom JavaScript -->
-<script src="{{ asset('/js/chart-custom.js') }}"></script>
+<script src="{{ asset('/assets/js/chart-custom.js') }}"></script>
 
 <!-- app JavaScript -->
-<script src="{{ asset('/js/app.js') }}"></script>
+<script src="{{ asset('/assets/js/app.js') }}"></script>
+@livewireScripts
 </body>
 
 
