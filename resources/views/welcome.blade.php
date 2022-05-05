@@ -1,35 +1,6 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-     <!-- Favicon -->
-     <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" />
-      <!-- Hoja de estilos -->
-      <link rel="stylesheet" href="{{ asset('css/backend-plugin.min.css') }}" />
-      <link rel="stylesheet" href="{{ asset('css/backend-v=1.0.0.css') }}" />
-      <!-- Font Awesome -->
-      <link rel="stylesheet" href="{{ asset('/@fortawesome/fontawesome-free/css/all.min.css') }}" />
-      <link rel="stylesheet" href="{{ asset('line-awesome/dist/line-awesome/css/line-awesome.min.css') }}" />
-      <link rel="stylesheet" href="{{ asset('remixicon/fonts/remixicon.css') }}" />
+<x-layout>
 
 
-    <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>PRISMA - INICIO</title>
-      
-     
-    
-    </head>
-
-     <!-- loader Start -->
-     <!-- <div id="loading">
-          <div id="loading-center">
-          </div>
-    </div> -->
-    <!-- loader END -->
-
-    <body>
-        
-        @livewire('navbar')
 
     <div class="content-page">
      <div class="container-fluid">
@@ -55,7 +26,7 @@
                                         <p class="mb-2">NAN</p>
                                         <h4>0</h4>
                                     </div>
-                                </div>                                
+                                </div>
                                 <div class="iq-progress-bar mt-2">
                                     <span class="bg-info iq-progress progress-1" data-percent="85">
                                     </span>
@@ -108,7 +79,7 @@
                     <div class="card-header d-flex justify-content-between">
                         <div class="header-title">
                             <h4 class="card-title">NAN</h4>
-                        </div>                        
+                        </div>
                         <div class="card-header-toolbar d-flex align-items-center">
                             <div class="dropdown">
                                 <span class="dropdown-toggle dropdown-bg btn" id="dropdownMenuButton001"
@@ -123,7 +94,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                     <div class="card-body">
                         <div id="layout1-chart1"></div>
                     </div>
@@ -234,7 +205,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">  
+            <div class="col-lg-4">
                 <div class="card-transparent card-block card-stretch mb-4">
                     <div class="card-header d-flex align-items-center justify-content-between p-0">
                         <div class="header-title">
@@ -273,8 +244,8 @@
                         </div>
                     </div>
                 </div>
-            </div>            
-            <div class="col-lg-4">  
+            </div>
+            <div class="col-lg-4">
                 <div class="card card-block card-stretch card-height-helf">
                     <div class="card-body">
                         <div class="d-flex align-items-top justify-content-between">
@@ -326,12 +297,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-8">  
+            <div class="col-lg-8">
                 <div class="card card-block card-stretch card-height">
                     <div class="card-header d-flex justify-content-between">
                         <div class="header-title">
                             <h4 class="card-title">Order Summary</h4>
-                        </div>                        
+                        </div>
                         <div class="card-header-toolbar d-flex align-items-center">
                             <div class="dropdown">
                                 <span class="dropdown-toggle dropdown-bg btn" id="dropdownMenuButton005"
@@ -346,7 +317,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div> 
+                    </div>
                     <div class="card-body pb-2">
                         <div class="d-flex flex-wrap align-items-center mt-2">
                             <div class="d-flex align-items-center progress-order-left">
@@ -392,39 +363,6 @@
       </div>
     </div>
     <!-- Wrapper End-->
-    <footer class="iq-footer">
-            <div class="container-fluid">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <ul class="list-inline mb-0">
-                                <li class="list-inline-item"><a href="privacy-policy.html">Privacy Policy</a></li>
-                                <li class="list-inline-item"><a href="terms-of-service.html">Terms of Use</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-lg-6 text-right">
-                            <span class="mr-1"><script>document.write(new Date().getFullYear())</script>©</span> <a href="#" class="">POS Dash</a>.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    </body>
-    <!-- Backend Bundle JavaScript -->
-    <script src="{{ asset('js/backend-bundle.min.js') }}"></script>
-    
-    <!-- Table Treeview JavaScript -->
-    <script src="{{ asset('js/table-treeview.js') }}"></script>
-    
-    <!-- Chart Custom JavaScript -->
-    <script src="{{ asset('js/customizer.js') }}"></script>
-    
-    <!-- Chart Custom JavaScript -->
-    <script src="{{ asset('js/chart-custom.js') }}"></script>
-    
-    <!-- app JavaScript -->
-    <script src="{{ asset('/js/app.js') }}"></script>
-  
-</html>
+
+
+</x-layout>
