@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream:resources/views/livewire/navbar.blade.php
 <div>
     <div class="iq-sidebar  sidebar-default ">
         <div class="iq-sidebar-logo d-flex  align-items-center justify-content-between">
@@ -6,6 +7,16 @@
           </a>
           <div class="iq-menu-bt-sidebar ml-0">
               <i class="las la-bars wrapper-menu"></i>
+=======
+<div class="iq-sidebar  sidebar-default ">
+          <div class="iq-sidebar-logo d-flex  align-items-center justify-content-between">
+              <a href="{{route('welcome')}}" class="brand-logo">
+                <img class="logo-abbr" src="../images/prisma.png" alt="">
+            </a>
+              <div class="iq-menu-bt-sidebar ml-0">
+                  <i class="las la-bars wrapper-menu"></i>
+              </div>
+>>>>>>> Stashed changes:resources/views/navbar.blade.php
           </div>
         </div>
           <div class="data-scrollbar" data-scroll="1">
@@ -284,4 +295,3 @@
               </nav>
           </div>
       </div>
-</div>

@@ -1,5 +1,8 @@
 <x-layout>
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     <div class="content-page">
      <div class="container-fluid">
         <div class="row">
@@ -361,6 +364,4 @@
       </div>
     </div>
     <!-- Wrapper End-->
-
-
 </x-layout>

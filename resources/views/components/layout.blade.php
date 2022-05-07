@@ -31,7 +31,7 @@
 <body>
  
 
-    @livewire('navbar')
+    @include('navbar')
 
 {{ $slot }}
 
@@ -80,6 +80,4 @@
 <script src="{{ asset('/assets/js/app.js') }}"></script>
 @livewireScripts
 </body>
-
-
 </html>
