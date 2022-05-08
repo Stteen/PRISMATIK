@@ -15,10 +15,27 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
+
+Route::get('/proveedores', function () {
+    return view('proveedores');
+})->name('proveedores');
+
+Route::get('/clientes', function () {
+    return view('clientes');
+})->name('clientes');
+
+Route::get('/productos', function () {
+    return view('productos');
+})->name('productos');
+
+Route::get('/ordenServicio', function () {
+    return view('ordenServicio');
+})->name('ordenServicio');
+
