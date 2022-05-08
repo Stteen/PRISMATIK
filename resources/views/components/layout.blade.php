@@ -10,7 +10,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('/@fortawesome/fontawesome-free/css/all.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('line-awesome/dist/line-awesome/css/line-awesome.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('/assets/remixicon/fonts/remixicon.css') }}" />
+    <link rel="stylesheet" href="{{ asset('/remixicon/fonts/remixicon.css') }}" />
 
 
     <meta charset="utf-8">
