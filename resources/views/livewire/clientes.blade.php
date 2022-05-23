@@ -13,6 +13,77 @@
 
                         @switch($accion)
 
+                        @case('verCliente')
+                        <div class="card-header d-flex justify-content-between row" style="margin-left:0px; margin-right:0px;">
+                            <div class="header-title">
+                                <h4 class="card-title">
+                                   Cliente: {{$cliente['varNombreConta']}} - {{$cliente['idDocumentos']}}
+                                </h4>
+                            </div>
+                            <div class="">
+                                <a wire:click='volver' class="btn border add-btn shadow-none mx-2 d-none d-md-block">Volver</a>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="form-row">
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label">Nombre de Contacto:</label>&nbsp;
+                                    {{ $cliente['varNombreConta']}}
+                                </div>
+
+                                <div class="mb-3 col-md-4">
+                                <label class="form-label">Tipo de Identificación:</label>&nbsp;
+                                {{ $cliente['varTipoIdCliente']}}
+                                </div>
+
+                                <div class="mb-3 col-md-4">
+                                <label class="form-label">Numero de Identificación:</label>&nbsp;
+                                    {{ $cliente['idDocumentos'] }}
+                                </div>
+
+                                <div class="mb-3 col-md-4">
+                                <label class="form-label">Nombre o razón Social:</label>&nbsp;
+                                    {{ $cliente['varNombreRazon']}}
+                                </div>
+
+                                <div class="mb-3 col-md-4">
+                                <label class="form-label">Teléfono:</label>&nbsp;
+                                    {{ $cliente['varTelefono']}}
+                                </div>
+
+                                <div class="mb-3 col-md-4">
+                                <label class="form-label">Dirección:</label>&nbsp;
+                                    {{ $cliente['varDireccion']}}
+                                </div>
+
+                                <div class="mb-3 col-md-4">
+                                <label class="form-label">Correo Electrónico:</label>&nbsp;
+                                    {{ $cliente['varCorreo']}}
+                                </div>
+
+                              
+
+                                <div class="mb-3 col-md-4">
+                                <label class="form-label">Teléfono de Contacto:</label>&nbsp;
+                                    {{ $cliente['varTelContacto']}}
+                                </div>
+
+                                <div class="mb-3 col-md-4">
+                                <label class="form-label">Zona:</label>&nbsp;
+                                    {{ $cliente['varZona']}}
+                                </div>
+
+                                <div class="mb-3 col-md-4">
+                                <label class="form-label">Tecnico Asignado:</label>&nbsp;
+                                        {{ $cliente['varTecnicoAsig']}}
+                                </div>
+                                
+                            </div>
+                    </div>
+
+                        @break
+
                         @case('formCliente')
 
                         <div class="card-header d-flex justify-content-between row" style="margin-left:0px; margin-right:0px;">
@@ -123,11 +194,6 @@
                             </div>
 
                         </div>
-
-
-
-
-
                         @break
 
 
@@ -173,9 +239,10 @@
                                                     <button wire:click="activarCliente({{ $cliente['idClientes'] }})" class="btn btn-success btn-sm btn-icon icon-only"><i class="fa fa-check"></i></button>
                                                     @else
                                                     <button wire:click="desactivarCliente({{ $cliente['idClientes'] }})" class="btn btn-danger btn-sm btn-icon icon-only"><i class="fa fa-times"></i></button>
-                                                    @endif
                                                     <button wire:click="editarCliente({{ $cliente['idClientes'] }})" class="btn btn-warning btn-sm btn-icon icon-only"><i class="fa fa-pen"></i></button>
-                                                    {{ $cliente['idClientes'] }}</td>
+                                                    <button wire:click="verCliente({{ $cliente['idClientes'] }})" class="btn btn-info btn-sm btn-icon icon-only"><i class="fa fa-eye"></i></button>
+                                                    @endif
+                                                </td>
                                             </tr>
 
 

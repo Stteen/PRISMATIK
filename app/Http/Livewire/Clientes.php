@@ -7,10 +7,13 @@ use Livewire\WithPagination;
 
 class Clientes extends Component
 {
-
+/* Declaramos las variables necesarias para el manejo de los datos */
     public $clientes,$accion,$cliente;
+
+/* Declaramos la variable para el manejo de los mensajes de error */
     public $mensaje=[];
 
+    /* Declaramos las reglas del formulario para indicar cuales son requeridas y cuales no */
     public $rules=[
         "cliente.varTipoIdCliente" => "required",
         "cliente.idDocumentos" => "required",
@@ -24,6 +27,7 @@ class Clientes extends Component
         "cliente.varZona" => "required"
     ];
 
+    /* Declaramos una variable protegida para los mensajes de error de los campos al enviar un campo vacio */
     protected $validationAttributes = [
         "cliente.varTipoIdCliente" => "Tipo de Documento",
         "cliente.idDocumentos" => "Documento",
@@ -37,20 +41,29 @@ class Clientes extends Component
         "cliente.varZona" => "Ruta"
     ];
 
-    public function mount()
-    {
-    }
-
+    /* esta funcion inciara un objeto y nos enviara al caso FormClientes donde se encuentra el formulario para crear o editar */
     public function crearCliente(){
         $this->accion = 'formCliente';
         $this->cliente = [];
     }
+
+    /* una funcion que mediante una peticion obtenemos el id y lo tratamos como una coleccion de tipo json*/
     public function editarCliente($id){
         $this->accion = 'formCliente';
         $this->cliente = Http::get(env('API_URL').'/client/getById?id='.$id)->json();
 
     }
 
+    /* Mediante la peticion que obtenemos del Request $id, enviamos una peticion a la api para obtener
+    un cliente por el request $id pasado e indicamos a que caso (accion) nos enviara*/
+    public function verCliente($id){
+        $this->accion = 'verCliente';
+        $this->cliente = Http::get(env('API_URL').'/client/getById?id='.$id)->json();
+
+    }
+
+    /* creamos una condicion si  idClientes contiene datos hara una peticion para actualizar en caso contrario 
+    Enviara una peticion para crear un cliente*/
     public function guardarCliente(){
 
         $this->validate();
@@ -70,12 +83,10 @@ class Clientes extends Component
             $this->mensaje=["type"=>"danger","message"=>"Error al crear el cliente"];
         }
 
-
-
     }
-
+    
+    /* hace una peticion a la api de Prisma mediante el request $id para activar el Cliente */
     public function activarCliente($id){
-
         $response=Http::put(env('API_URL')."/client/activateById?id={$id}")->json();
 
         if($response===TRUE){
@@ -87,6 +98,8 @@ class Clientes extends Component
         }
     }
 
+
+    /* hace una peticion a la api de Prisma mediante el request $id para desactivar el Cliente */
     public function desactivarCliente($id){
         $response=Http::delete(env('API_URL')."/client/deleteById?id={$id}")->json();
 
@@ -97,16 +110,15 @@ class Clientes extends Component
         }
     }
 
-
-
+    /* Esta funcion permite enviar al default que en este caso donde se encuentra el listado */
     public function volver(){
         $this->accion = '';
         $this->cliente = [];
     }
-
-
-    public function render()
-    {
+    
+    /* Esta funcion permite incializar la variable para obtener el listado llamando y almacenandola en la variable
+    cliente*/
+    public function render(){
         $this->clientes = Http::get('https://prismapi-docker.herokuapp.com/client/getAllComplete')->json();
         return view('livewire.clientes');
     }
