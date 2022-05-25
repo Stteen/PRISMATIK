@@ -36,10 +36,10 @@
                                 </div>
 
                         <div class="mb-3 col-md-8 text-center">
-                                <label class="form-label">Foto del Producto: </label>
+                                <label class="form-label">Imagen del Producto: </label>
                                 @if(isset($this->producto['varImagenProd']))
                                 <div class="col-sm-12 responsive py-3 text-center" >
-                                <img src="{{ $photo }}" width="300" height="200" alt="{{$this->producto['varImagenProd']}}"/>
+                                <img src="{{ $photo }}" width="300" height="200" alt="{{$this->photo}}"/>
                                 </div>
                                 @endif
                         </div>
@@ -51,9 +51,11 @@
                         @case('formProducto')
                         <div class="card-header d-flex justify-content-between row" style="margin-left:0px; margin-right:0px;">
                         <div class="header-title">
-                            
+                            @if(isset($producto['IdPortafolio']))
+                            <h4 class="card-title">Editar Producto: #{{ $producto['IdPortafolio'] }}</h4>
+                            @else
                             <h4 class="card-title">Crear Producto</h4>
-                           
+                           @endif
                         </div>
                         <div class="">
                             <button wire:click="volver" class="btn border add-btn shadow-none mx-2 d-none d-md-block">Volver</button> 
@@ -94,13 +96,13 @@
                                     <span class='text-danger'>{{ $message }}</span>
                                 @enderror
 
-                                @if(isset($photo))
+                                @if(isset($this->producto['varImagenProd']))
                                 <div class="col-sm-4 responsive py-3" >
-                                <img src="{{$photo->temporaryUrl() }}" width="300" height="200"/>
+                                <img src="{{ $photo }}" width="300" height="200"/>
                                 </div>
-                                @elseif(isset($this->producto['varImagenProd']))
-                                <div class="col-sm-12 responsive py-3 text-center" >
-                                <img src="{{ $photo }}" width="300" height="200" alt="{{$this->producto['varImagenProd']}}"/>
+                                @elseif(isset($photo))
+                                <div class="col-sm-4 responsive py-3" >
+                                <img src="{{ $photo->temporaryUrl() }}" width="300" height="200"/>
                                 </div>
                                 @endif
                                 </div>
@@ -124,7 +126,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-
+                    @if($productos>0)
                     <table class='table table-bordered table-sm text-center'>
                                     <thead>
                                         <tr>
@@ -135,7 +137,8 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($productos AS $item)
+                                       
+                                        @foreach($productos as $item)
                                             <tr>
                                                 <td>{{$item['varReferencia']}}</td>
                                                 <td>
@@ -155,6 +158,11 @@
                                         @endforeach
                                     </tbody>    
                             </table>
+                            @else
+                                <div class="alert alert-info text-center">
+                                    <h5 class="text-center">Aún no cuenta con Productos para su Empresa</h5>   
+                                </div>
+                            @endif
                         
                     </div>
                     @break

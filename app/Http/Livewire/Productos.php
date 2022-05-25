@@ -45,26 +45,30 @@ class Productos extends Component
     }
 
     public function crearProducto(){
-        $this->accion = 'formProducto';
         $this->resetValidation();
         $this->mensaje = "";
         $this->producto = [];
+        $this->photo = null;    
+        $this->accion = 'formProducto';
     }
 
     public function guardarProducto(){
         $this->validate();
         if(isset($this->producto['IdPortafolio'])){
+               /* actualizar la url de una imagen */
                 $nombrePhoto = $this->photo->getClientOriginalName();
-                $filePath = Storage::url($this->photo->storeAs('app/public/productos', $nombrePhoto));
-                $this->producto['varImagenProd'] = $filePath;
+                $this->producto['varImagenProd'] = Storage::url('app/'.$this->photo->storeAs('image/productos', $nombrePhoto));
+
+                $this->producto['varTipoProducto'] = "Lavaplatos";
                 
             $response=Http::put(env('API_URL').'/portfolio/updateById',$this->producto)->json();
         }else{
            
             $this->producto['bolEstado'] = 1;
                 $nombrePhoto = $this->photo->getClientOriginalName();
-                $filePath = Storage::url($this->photo->storeAs('app/public/productos', $nombrePhoto));
+                $filePath = Storage::url('app/'.$this->photo->storeAs('image/productos', $nombrePhoto));
                 $this->producto['varImagenProd'] = $filePath;
+                $this->producto['varTipoProducto'] = "CONJUNTO DUCHA";
                 $response=Http::post(env('API_URL').'/portfolio/create',$this->producto)->json();
         }
 
@@ -84,16 +88,19 @@ class Productos extends Component
         $this->accion = 'verProducto';
         $this->mensaje = "";
         $this->producto = Http::get(env('API_URL').'/portfolio/getById?id='.$id)->json();
-        $this->producto['varImagenProd'] = str_replace('storage/app/','',$this->producto['varImagenProd']);
-        $this->photo = 'data:'.Storage::mimeType($this->producto['varImagenProd']).';base64, '.base64_encode(Storage::get($this->producto['varImagenProd']));
 
-    }
+        $this->producto['varImagenProd'] = str_replace('/storage/app/','',$this->producto['varImagenProd']);
+        $this->photo = 'data:'.Storage::mimeType($this->producto['varImagenProd']).';base64, '.base64_encode(Storage::get($this->producto['varImagenProd']));
+     
+    } 
 
     public function editProducto($id){
         $this->accion = "formProducto";
         $this->mensaje = "";
         $this->producto = Http::get(env('API_URL').'/portfolio/getById?id='.$id)->json();
+        $this->producto['varImagenProd'] = str_replace('/storage/app/','',$this->producto['varImagenProd']);
         $this->photo = 'data:'.Storage::mimeType($this->producto['varImagenProd']).';base64, '.base64_encode(Storage::get($this->producto['varImagenProd']));
+     
     }
 
 

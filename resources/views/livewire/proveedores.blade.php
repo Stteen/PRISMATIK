@@ -109,7 +109,7 @@
                                 </div>
                                 <div class="col-lg-3">
                                     <b>Teléfono:</b>
-                                    <input wire:model='proveedor.varTelefono' type="text" class="form-control" placeholder="Teléfono">
+                                    <input wire:model='proveedor.varTelefono' type="number" class="form-control" placeholder="Teléfono">
                                     @error('proveedor.varTelefono')
                                     <span class='text-danger'>{{ $message }}</span>
                                 @enderror
