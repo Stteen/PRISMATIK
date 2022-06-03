@@ -1,134 +1,169 @@
 <?php
 
 namespace App\Http\Livewire;
+
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Carbon\Carbon;
+use App\Models\Producto;
+use App\Models\OrdenesServicio;
+use App\Models\Proveedor;
+use App\Models\OrdenDetalle;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class OrdenServicio extends Component
 {
-    public $ordenes,$accion,$orden, $proveedores, $clientes, $productos, $productoOrden, $productoOrdenes;
+ 
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
+    
+    /* Inicializamos las variables necesarias para el funcionamiento*/
+    public $accion, $orden, 
+    $proveedores, $clientes, $productos, 
+    $productoOrden, $productoOrdenes;
 
+    /* Declaramos las reglas para el formulario */
     public $rules=[
         "orden.varProveedor" => "required",
-        "orden.varResponsable" => "required",
         "orden.varTipoOrden" => "required",
         "orden.dtFechaEntrega" => "",
-        "orden.varCliente" => "required"
+        "orden.varCliente" => "required",
+        "productoOrden.varTipoProducto" => "",
+        "productoOrden.cantidad" => "",
+        "productoOrden.ref_entrada" => "",
+        "productoOrden.ref_salida"=> "",
+        "productoOrden.varPrecio" => "",
     ];
 
-
+    /* Le damos un valor personalizado para los errores del formulario */
     protected $validationAttributes = [
         "orden.varProveedor" => "Proveedor",
-        "orden.varResponsable" => "Responsable",
         "orden.varTipoOrden" => "Tipo de Orden",
         "orden.dtFechaEntrega" => "Fecha de Entrega",
         "orden.varCliente" => "Cliente"
     ];
 
+    /* Lleva a la accion de crear Ordenes de Servicios */
     public function crearOrdenServicio(){
+
+        // Reseteamos los errores de validacion al entrar a la vista
+        $this->resetValidation();
         $this->accion = 'formOrdenServicio';
-        $this->orden = [];
-        $this->proveedores =  Http::get(env('API_URL').'/providers/getAll')->json();
-        $this->clientes =  Http::get(env('API_URL').'/client/getAll')->json();
+
+        // Inicializamos la variable que contiene los valores del formulario
+        $this->orden = new OrdenesServicio;
     }
 
-    /* Creamos una funcion que nos llamara a la peticion del listado de Proveedores y la llamamos $id para
-    que nos traiga su coleccion. Enviandonos a la vez al caso formproveedor para mostrar sus respectivos datos mediante la peticion, 
-    le indicamos que la variable global proveedor enviara una peticion de tipo get con el metodo */
+    public function calcularFechaEntrega(){
+        $proveedor = Proveedor::find($this->orden->varProveedor);
+        $fechaEntrega = Carbon::now()->add($proveedor->intPlazoEntr, 'days');
+       
+        $this->orden->dtFechaEntrega = $fechaEntrega->format('Y-m-d');
+    }
+
+    /* La funcion recibe un parametro desde el listado para la seleccion a editar */
     public function editarOrdenServicio($id){
+        // Reseteamos los errores de validacion al entrar a la vista
+        $this->resetValidation();
+      
+        // Enviamos a la accion de la vista Formulario
         $this->accion = 'formOrdenServicio';
-        $this->orden = Http::get(env('API_URL').'/serviceOrder/getById?id='.$id)->json();
-        $this->proveedores =  Http::get(env('API_URL').'/providers/getAll')->json();
-        $this->clientes =  Http::get(env('API_URL').'/client/getAll')->json();
-        $this->productos = Http::get(env('API_URL').'/portfolio/getAll')->json();
-        $this->productoOrden = [];
-        $this->productoOrdenes = [];
+
+        // Obtenemos los valores necesarios para editar y mostrar ejecutados por la api PRISMA
+        $this->orden = OrdenesServicio::find($id);
+
+        // Inicializamos un array vacio para el agregado de productos a la orden
+        $this->productoOrden = new OrdenDetalle;
+
     }
 
+    // Funcion para agregar los productos a la orden de servicio 
     public function agregarProducto(){
-        $this->productoOrdenes[] = $this->productoOrden;
-        $this->productoOrden = [];
+
+        $this->productoOrden->orden_id = $this->orden->IdOrdenServicio; ;
+        $this->productoOrden->save();
+        
+        $this->editarOrdenServicio($this->orden->IdOrdenServicio);
     }
 
+    // Envia al caso para la vista de Ordenes de servicio pasando el parametro id
     public function verOrdenServicio($id){
-        $this->accion = 'verproveedor';
-        $this->proveedor = Http::get(env('API_URL').'/providers/getById?id='.$id)->json();
+        // Indicamos la accion a donde queremos ingresar
+        $this->accion = 'verOrdenServicio';
 
+        // Ejecutamos una peticion de tipo Get con el parametro id y la almacenamos en la variable global de Orden
+        $this->orden = OrdenesServicio::find($id);
     }
 
+    // Funcion para Guardar y Actualizar las Ordenes de servicio
     public function guardarOrdenServicio(){
+        // Validamos las reglas del formulario
         $this->validate();
-        /* Preguntamos si la variable orden contiene un id si es asi ejecutara el metodo PUT que envia a la api */
-        if(isset($this->orden['idOrdenServicio'])){
+        // Almacenamos y enviamos la fecha en formato de hoy
+        $this->orden->dtFecha = date('Y-m-d');
+            // le indicamos quien es el responsable
+            $this->orden->varResponsable = auth()->user()->name;
 
-            $response=Http::put(env('API_URL').'/serviceOrder/updateById',$this->orden)->json();
-        }
-        /* En caso de que la vista no traiga un id este ejecutara el metodo post agregandole automaticamente 
-        Los campos que el usuario no registra en la plataforma */
-        else{
-            $this->orden['dtFecha'] = date('Y-m-d');
-            $this->orden['varResponsable'] = "Admin";
-            
-            if($this->orden['varTipoOrden'] == 'Pedido de Muestra'){
-                $this->orden['varConsecutivo'] = $this->orden['dtFecha']."-OM"; 
-            }else{
-                $this->orden['varConsecutivo'] = $this->orden['dtFecha']."-OS"; 
+            // Le indicamos cual será el prefijo del consecutivo a buscar
+            switch($this->orden->varTipoOrden){
+                case 'Muestra': $prefijo =date('Y')."-OM"; break;
+                case 'Pedido': $prefijo =date('Y')."-OS"; break;
+
             }
-
-            $response=Http::post(env('API_URL').'/serviceOrder/create',$this->orden)->json();
-          
-        }
-
-
-        if($response!==FALSE){
-            $this->mensaje=["type"=>"success","message"=>"Orden de Servicio guardado correctamente"];
-        }
-        else{
-            $this->mensaje=["type"=>"danger","message"=>"Error al guardar la orden de Servicio"];
-        }
-
-
-
+            // Buscamos el último consecutivo dentro de las ordenes de servicio
+            $consecutivo = OrdenesServicio::where('varConsecutivo','LIKE',$prefijo.'%')->orderBy('IdOrdenServicio','DESC')->first();
+            
+            // Si no existe un consecutivo le asignamos el valor 1
+            if(!$consecutivo){
+                $proximo = 1;
+            }else{
+                // Si existe un consecutivo le sumamos 1
+                $proximo=str_replace($prefijo,'',$consecutivo->varConsecutivo)+1;
+               
+            }
+            $this->orden->varConsecutivo = $prefijo.str_pad($proximo,5,'0',STR_PAD_LEFT);
+            
+         $this->orden->save();
     }
 
-    public function activarOrdenServicio($id){
-
-        $response=Http::put(env('API_URL')."/serviceOrder/activateById?id=".$id)->json();
-
-        if($response===TRUE){
-
-            $this->mensaje=["type"=>"success","message"=>"Orden de Servicio activado correctamente"];
-        }
-        else{
-            $this->mensaje=["type"=>"danger","message"=>"Error al activar la Orden de Servicio"];
-        }
+    // Funcion para cambiar el estado y avisar al proveedor que ya el producto ha sido enviado
+    public function enviaProducto($id){
+        $this->orden = OrdenesServicio::find($id);
+        $this->orden->Estado = 'ENVIADO';
+        $this->orden->save();
     }
 
-    public function desactivarOrdenServicio($id){
-        $response=Http::delete(env('API_URL')."/serviceOrder/deleteById?id=".$id)->json();
-
-        if ($response===TRUE) {
-            $this->mensaje=["type"=>"success","message"=>"proveedor desactivado correctamente"];
-        } else {
-            $this->mensaje=["type"=>"danger","message"=>"Error al desactivar el proveedor"];
-        }
+    // Funcion para el renderizado de la pagina de listado de Ordenes de servicio
+    public function render(){
+        // Nos regresa la vista de Ordenes de Servicio
+        return view('livewire.orden-servicio', [
+            'ordenes' => OrdenesServicio::orderBy('IdOrdenServicio', 'DESC')->paginate(5),
+        ]);
     }
 
-
-    public function render()
-    {
-        $this->ordenes = Http::get('https://prismapi-docker.herokuapp.com/serviceOrder/getAllComplete')->json();
-        return view('livewire.orden-servicio');
-    }
-
+    // Funcion para el boton que envia al listado de Ordenes de servicio
     public function volver(){
         $this->accion = '';
-        $this->mensaje = '';
+        $this->mensaje = [];
     }
 
     public function mount()
     {
+    }
+
+    public function imprimePDF($id){
+        $orden = OrdenesServicio::find($id);
+       $pdf =  PDF::loadView('ordenPDF', ['orden' => $orden])->stream('orden'.$orden->varConsecutivo.'.pdf');
+       return response()->stream(function() use ($pdf) {
+            echo $pdf;
+        }, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="ordenPDF.pdf"',
+            'Content-Transfer-Encoding' => 'binary',
+        ]);
+     
+        
     }
 }

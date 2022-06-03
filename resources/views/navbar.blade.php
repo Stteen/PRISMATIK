@@ -22,8 +22,10 @@
                                   <polyline points="10 15 15 20 20 15"></polyline><path d="M4 4h7a4 4 0 0 1 4 4v12"></path>
                               </svg>
                           </a>
+
                           <ul id="product" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                              <li class="">
+                          @if(Auth()->User()->tipo_usuario == "Admin")   
+                          <li class="">
                                   <a href="{{route('proveedores')}}">
                                       <i class="las la-minus"></i><span>Proveedores</span>
                                   </a>
@@ -39,7 +41,7 @@
                                 </a>
                             </li>
                             <li class="">
-                                <a href="#">
+                                <a href="{{route('consultaOrdenes')}}">
                                     <i class="las la-minus"></i><span>Consultar</span>
                                 </a>
                             </li>
@@ -53,23 +55,26 @@
                                     <i class="las la-minus"></i><span>Indicadores</span>
                                 </a>
                             </li>
+                            @else
                             <li class="">
-                                <a href="#">
+                                <a href="{{route('nuevasOrdenes')}}">
                                     <i class="las la-minus"></i><span>Nuevas Órdenes</span>
                                 </a>
                             </li>
                             <li class="">
-                                <a href="#">
+                                <a href="{{route('ordenDespachada')}}">
                                     <i class="las la-minus"></i><span>Despachadas</span>
                                 </a>
                             </li>
                             <li class="">
-                                <a href="#">
+                                <a href="{{route('ordenProceso')}}">
                                     <i class="las la-minus"></i><span>En proceso</span>
                                 </a>
                             </li>
+                            @endif
                           </ul>
                       </li>
+                      @if(Auth()->User()->tipo_usuario == "Admin")
                       <li class=" ">
                           <a href="#category" class="collapsed" data-toggle="collapse" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-headset" viewBox="0 0 16 16">
@@ -87,12 +92,12 @@
                                           </a>
                                   </li>
                                   <li class="">
-                                    <a href="#">
+                                    <a href="{{route('tecnicos')}}">
                                         <i class="las la-minus"></i><span>Técnicos</span>
                                     </a>
                                   </li>
                                   <li class="">
-                                    <a href="#">
+                                    <a href="{{route('zonas')}}">
                                         <i class="las la-minus"></i><span>Zonas</span>
                                     </a>
                                   </li>
@@ -118,15 +123,7 @@
                                   </li>
                           </ul>
                       </li>
-                      <li class=" ">
-                        <a href="#category" class="collapsed" data-toggle="collapse" aria-expanded="false">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-door-open" viewBox="0 0 16 16">
-                                <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1z"/>
-                                <path d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117zM11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5zM4 1.934V15h6V1.077l-6 .857z"/>
-                              </svg>
-                            <span class="ml-4">Cerrar Sesión</span>
-                        </a>
-                    </li>
+                      @endif
                   </ul>
               </nav>
               <div id="sidebar-bottom" class="position-relative sidebar-bottom">
@@ -267,11 +264,17 @@
                                                       class="rounded profile-img img-fluid avatar-70">
                                               </div>
                                               <div class="p-3">
-                                                  <h5 class="mb-1">Stiven@teclab.com.co</h5>
+                                                  <h5 class="mb-1">{{ auth()->user()->email }}</h5>
                                                   <p class="mb-0">Abril 2022</p>
                                                   <div class="d-flex align-items-center justify-content-center mt-3">
                                                       <a href="../app/user-profile.html" class="btn border mr-2">Perfil</a>
-                                                      <a href="auth-sign-in.html" class="btn border">Cerrar Sesión</a>
+                                                      <form method="POST" action="{{ route('logout') }}">
+                                                            @csrf
+
+                                                            <button class="btn border mr-2">Cerrar Session</button>
+                                                    
+                                                        </form>
+                                                     
                                                   </div>
                                               </div>
                                           </div>

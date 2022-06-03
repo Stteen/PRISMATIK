@@ -17,7 +17,7 @@
                         <div class="card-header d-flex justify-content-between row" style="margin-left:0px; margin-right:0px;">
                             <div class="header-title">
                                 <h4 class="card-title">
-                                   Cliente: {{$cliente['varNombreConta']}} - {{$cliente['idDocumentos']}}
+                                   Cliente: {{$cliente->varNombreConta}}
                                 </h4>
                             </div>
                             <div class="">
@@ -39,44 +39,44 @@
 
                                 <div class="mb-3 col-md-4">
                                 <label class="form-label">Numero de Identificación:</label>&nbsp;
-                                    {{ $cliente['idDocumentos'] }}
+                                    {{ $cliente->IdDocumentos }}
                                 </div>
 
                                 <div class="mb-3 col-md-4">
                                 <label class="form-label">Nombre o razón Social:</label>&nbsp;
-                                    {{ $cliente['varNombreRazon']}}
+                                    {{ $cliente->varNombreRazon}}
                                 </div>
 
                                 <div class="mb-3 col-md-4">
                                 <label class="form-label">Teléfono:</label>&nbsp;
-                                    {{ $cliente['varTelefono']}}
+                                    {{ $cliente->varTelefono}}
                                 </div>
 
                                 <div class="mb-3 col-md-4">
                                 <label class="form-label">Dirección:</label>&nbsp;
-                                    {{ $cliente['varDireccion']}}
+                                    {{ $cliente->varDireccion}}
                                 </div>
 
                                 <div class="mb-3 col-md-4">
                                 <label class="form-label">Correo Electrónico:</label>&nbsp;
-                                    {{ $cliente['varCorreo']}}
+                                    {{ $cliente->varCorreo}}
                                 </div>
 
                               
 
                                 <div class="mb-3 col-md-4">
                                 <label class="form-label">Teléfono de Contacto:</label>&nbsp;
-                                    {{ $cliente['varTelContacto']}}
+                                    {{ $cliente->varTelContacto}}
                                 </div>
 
                                 <div class="mb-3 col-md-4">
                                 <label class="form-label">Zona:</label>&nbsp;
-                                    {{ $cliente['varZona']}}
+                                    {{ $cliente->zona->varCiudad}}
                                 </div>
 
                                 <div class="mb-3 col-md-4">
                                 <label class="form-label">Tecnico Asignado:</label>&nbsp;
-                                        {{ $cliente['varTecnicoAsig']}}
+                                        {{ $cliente->tecnico->varNombreCont}}
                                 </div>
                                 
                             </div>
@@ -167,19 +167,14 @@
                                 </div>
                                 <div class="col-lg-6">
                                     <b>Técnico Asignado:</b>
-                                    <input wire:model="cliente.varTecnicoAsig" type="text" class="form-control" placeholder="Técnico Asignado">
+                                    <x-select2 action="getZonas" method="" model="cliente.varTecnicoAsig" default="{{ $cliente['varTecnicoAsig'] }}"></x-select2>
                                     @error('cliente.varTecnicoAsig')
                                     <span class='text-danger'>{{ $message }}</span>
                                 @enderror
                                 </div>
                                 <div class="col-lg-3">
                                     <b>Zona:</b>
-                                    <select wire:model='cliente.varZona' class="form-control">
-                                        <option value="">Seleccione</option>
-                                        <option wire:key='Bello'>Bello</option>
-                                        <option wire:key='Medellín'>Medellín</option>
-
-                                    </select>
+                                    <x-select2 action="getZonas" default="{{ $cliente['varZona'] }}" model="cliente.varZona"></x-select2>
                                     @error('cliente.varZona')
                                         <span class='text-danger'>{{ $message }}</span>
                                     @enderror
@@ -211,12 +206,11 @@
                         </div>
                         <div class="card-body">
 
-                        <table class='table table-bordered table-sm text-center'>
+                        <table class='table text-center'>
                                         <thead>
                                             <tr>
                                                 <th>Documento</th>
                                                 <th>Razon Social</th>
-                                                <th>Teléfono</th>
                                                 <th>Correo</th>
                                                 <th>Acciones</th>
                                             </tr>
@@ -230,17 +224,16 @@
                                                 @endif
                                             >
 
-                                                <td>{{ $cliente['idDocumentos'] }}</td>
-                                                <td>{{ $cliente['varNombreConta'] }}</td>
-                                                <td>{{ $cliente['varTelContacto'] }}</td>
-                                                <td>{{ $cliente['varCorreo'] }}</td>
+                                                <td>{{ $cliente->IdDocumentos }}</td>
+                                                <td>{{ $cliente->varNombreConta }}</td>
+                                                <td>{{ $cliente->varCorreo }}</td>
                                                 <td>
-                                                    @if($cliente['bolEstado']==false)
-                                                    <button wire:click="activarCliente({{ $cliente['idClientes'] }})" class="btn btn-success btn-sm btn-icon icon-only"><i class="fa fa-check"></i></button>
+                                                    @if($cliente->bolEstado == 0)
+                                                    <button wire:click="activarCliente({{ $cliente->IdClientes }})" class="btn btn-success btn-sm btn-icon icon-only">Activar</button>
                                                     @else
-                                                    <button wire:click="desactivarCliente({{ $cliente['idClientes'] }})" class="btn btn-danger btn-sm btn-icon icon-only"><i class="fa fa-times"></i></button>
-                                                    <button wire:click="editarCliente({{ $cliente['idClientes'] }})" class="btn btn-warning btn-sm btn-icon icon-only"><i class="fa fa-pen"></i></button>
-                                                    <button wire:click="verCliente({{ $cliente['idClientes'] }})" class="btn btn-info btn-sm btn-icon icon-only"><i class="fa fa-eye"></i></button>
+                                                    <button wire:click="desactivarCliente({{ $cliente->IdClientes }})" class="btn btn-danger btn-sm btn-icon icon-only">Inactivar</button>
+                                                    <button wire:click="editarCliente({{ $cliente->IdClientes }})" class="btn btn-warning btn-sm btn-icon icon-only">Editar</button>
+                                                    <button wire:click="verCliente({{ $cliente->IdClientes }})" class="btn btn-info btn-sm btn-icon icon-only">Ver</button>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -250,9 +243,7 @@
 
                                         </tbody>
                                 </table>
-
-
-
+                            {{ $clientes->links() }}
                         </div>
 
                         @break

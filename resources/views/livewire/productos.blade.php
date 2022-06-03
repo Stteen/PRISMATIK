@@ -8,6 +8,12 @@
                         {{$mensaje['message']}}
                     </div>
                     @endif
+                    @if( Session::has("success") )
+                     <div class="alert alert-success alert-block" role="alert">
+                     <button class="close" data-dismiss="alert"></button>
+                     {{ Session::get("success") }}
+                    </div>
+                    @endif
                     <div class="card">
                       @switch($accion)
                       
@@ -15,7 +21,7 @@
 
                       <div class="card-header d-flex justify-content-between row" style="margin-left:0px; margin-right:0px;">
                         <div class="header-title">
-                            <h4 class="card-title">Ver Producto</h4>
+                            <h4 class="card-title">Producto</h4>
                         </div>
                         <div class="">
                             <button wire:click="volver" class="btn border add-btn shadow-none mx-2 d-none d-md-block">Volver</button> 
@@ -23,23 +29,29 @@
                     </div>
                     <div class="card-body">
                            <div class="row">
-                               <div class="col-md-4">
-                       
-                                <label class="form-label">Referencia: </label>
-                                {{$this->producto['varReferencia']}}<br />
-                       
-                                <label class="form-label">Color:</label>
-                                {{$this->producto['varColor']}}
-                        
-                                <label class="form-label">Descripcion del Producto: </label><br />
-                                <textarea class="form-control" readOnly>{{$this->producto['varDescripcion']}}</textarea>
-                                </div>
+                               <div class="col-md-5">
 
-                        <div class="mb-3 col-md-8 text-center">
+                               <label class="form-label mb-3">Descripcion del Producto:&nbsp;</label>
+                                {{$producto->varDescripcion}}<br />
+
+                                <label class="form-label mb-3">Referencia:&nbsp;</label>
+                                {{$producto->varReferencia}}<br />
+                       
+                                <label class="form-label mb-3">Color:&nbsp;</label>
+                                {{$producto->varColor}}<br />
+                        
+                              
+
+                                <label class="form-label">Tipo de Producto:&nbsp;</label>
+                                {{$producto->varTipoProducto}}
+                                </div>
+                                
+
+                        <div class="mb-3 col-md-7 text-center">
                                 <label class="form-label">Imagen del Producto: </label>
                                 @if(isset($this->producto['varImagenProd']))
                                 <div class="col-sm-12 responsive py-3 text-center" >
-                                <img src="{{ $photo }}" width="300" height="200" alt="{{$this->photo}}"/>
+                                <img src="{{ $photo }}" width="300" height="200" alt="Sin imagen"/>
                                 </div>
                                 @endif
                         </div>
@@ -63,8 +75,25 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
+
+                        <div class="mb-3 col-md-4">
+                                <label class="form-label">Descripcion del Producto  *</label>
+                                <input type="text" class="form-control" wire:model="producto.varDescripcion" />
+                                @error('producto.varDescripcion')
+                                    <span class='text-danger'>{{ $message }}</span>
+                                @enderror
+                                </div>
+
+                                
+                        <div class="mb-3 col-md-4">
+                                <label class="form-label">Color *</label>
+                                <input type="text" class="form-control" wire:model="producto.varColor" >
+                                @error('producto.varColor')
+                                    <span class='text-danger'>{{ $message }}</span>
+                                @enderror
+                                </div>
                            
-                        <div class="mb-3 col-md-6">
+                        <div class="mb-3 col-md-4">
                                 <label class="form-label">Referencia *</label>
                                 <input type="text" class="form-control" wire:model="producto.varReferencia" >
                                 @error('producto.varReferencia')
@@ -72,19 +101,18 @@
                                 @enderror
                                 </div>
 
-
-                        <div class="mb-3 col-md-6">
-                                <label class="form-label">Color *</label>
-                                <input type="text" class="form-control" wire:model="producto.varDescripcion" >
-                                @error('producto.varColor')
-                                    <span class='text-danger'>{{ $message }}</span>
-                                @enderror
-                                </div>
-
-                        <div class="mb-3 col-md-12">
-                                <label class="form-label">Descripcion del Producto  *</label>
-                                <textarea type="text" class="form-control" wire:model="producto.varColor" ></textarea>
-                                @error('producto.varDescripcion')
+                        <div class="mb-3 col-md-4">
+                                <label class="form-label">Tipo de Producto *</label>
+                                <select type="selected" class="form-control" wire:model="producto.varTipoProducto">
+                                    <option>Seleccione...</option>
+                                    <option value="Grifería Lavamanos">Grifería Lavamanos</option>
+                                    <option value="Grifería Lavaplatos">Grifería Lavaplatos</option>
+                                    <option value="Grifería de Ducha">Grifería de Ducha</option>
+                                    <option value="Regadera o Ducha">Regadera o Ducha</option>
+                                    <option value="Accesorios de baño">Accesorios de baño</option>
+                                    <option value="Otros">Otros</option>
+                                </select>
+                                @error('producto.varTipoProducto')
                                     <span class='text-danger'>{{ $message }}</span>
                                 @enderror
                                 </div>
@@ -100,7 +128,7 @@
                                 <div class="col-sm-4 responsive py-3" >
                                 <img src="{{ $photo }}" width="300" height="200"/>
                                 </div>
-                                @elseif(isset($photo))
+                                @elseif(isset($photo) AND !isset($producto['IdPortafolio']))
                                 <div class="col-sm-4 responsive py-3" >
                                 <img src="{{ $photo->temporaryUrl() }}" width="300" height="200"/>
                                 </div>
@@ -109,7 +137,7 @@
                                
                                 </div>
                                 
-                                <div class="col-sm-12 text-right">
+                                <div class="col-sm-12 text-right" wire:loading.remove>
                                <button wire:click="guardarProducto" class="btn btn-primary">Guardar<i class="bi bi-plus-circle"></i></button>
                                </div>
                             
@@ -126,8 +154,8 @@
                         </div>
                     </div>
                     <div class="card-body">
-                    @if($productos>0)
-                    <table class='table table-bordered table-sm text-center'>
+                  
+                    <table class='table text-center'>
                                     <thead>
                                         <tr>
                                             <th>Referencia</th>
@@ -138,9 +166,9 @@
                                     </thead>
                                     <tbody>
                                        
-                                        @foreach($productos as $item)
-                                            <tr>
-                                                <td>{{$item['varReferencia']}}</td>
+                                        @forelse($productos as $item)
+                                            <tr >
+                                                <td>{{$item->varReferencia}}</td>
                                                 <td>
                                                     @if($item['bolEstado']== 1)
                                                         <span class="badge badge-success">Activo</span>
@@ -148,21 +176,30 @@
                                                         <span class="badge badge-danger">Inactivo</span>
                                                     @endif
                                                 </td>
-                                                <td>{{$item['varColor']}}</td>
+                                                <td>{{$item->varColor}}</td>
                                                 <td>
-                                                    <button wire:click="verProducto({{$item['IdPortafolio']}})" class="btn btn-sm btn-info" type="btn" >Ver</button>
-                                                    <button wire:click="editProducto({{$item['IdPortafolio']}})" class="btn btn-sm btn-warning" type="btn" >Editar</button>
-                                                    <button wire:click="" class="btn btn-sm btn-success" type="btn" >Activar</button>
+                                                    @if($item['bolEstado'] == 1)
+                                                    <button wire:click="verProducto({{ $item['IdPortafolio'] }})" class="btn btn-sm btn-info" type="btn" >Ver</button>
+                                                    <button wire:click="editProducto({{ $item['IdPortafolio'] }})" class="btn btn-sm btn-warning" type="btn" >Editar</button>
+                                                    <button wire:click="cambiarEstado({{ $item['IdPortafolio'] }})" class="btn btn-sm btn-danger" type="btn" >Inactivar</button>
+                                                    @else
+                                                    <button wire:click="cambiarEstado({{ $item['IdPortafolio'] }})" class="btn btn-sm btn-success" type="btn" >Activar</button>
+                                                    @endif
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                         @empty
+                                         <tr>
+                                             <td colspan="4">
+                                                <div class="alert alert-info text-center">
+                                                    <h5 class="text-center">Aún no cuenta con Productos para su Empresa</h5>   
+                                                </div>
+                                             </td>
+                                         </tr>   
+                                        @endforelse
                                     </tbody>    
                             </table>
-                            @else
-                                <div class="alert alert-info text-center">
-                                    <h5 class="text-center">Aún no cuenta con Productos para su Empresa</h5>   
-                                </div>
-                            @endif
+                            {{ $productos->links() }}
+                           
                         
                     </div>
                     @break

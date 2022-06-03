@@ -4,16 +4,19 @@ namespace App\Http\Livewire;
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\Cliente;
 
 class Clientes extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
 /* Declaramos las variables necesarias para el manejo de los datos */
-    public $clientes,$accion,$cliente;
+    public $accion,$cliente;
 
 /* Declaramos la variable para el manejo de los mensajes de error */
     public $mensaje=[];
 
-    /* Declaramos las reglas del formulario para indicar cuales son requeridas y cuales no */
+    /* Declaramos las reglas del formulario para indicar cuales son requeridas */
     public $rules=[
         "cliente.varTipoIdCliente" => "required",
         "cliente.idDocumentos" => "required",
@@ -58,7 +61,7 @@ class Clientes extends Component
     un cliente por el request $id pasado e indicamos a que caso (accion) nos enviara*/
     public function verCliente($id){
         $this->accion = 'verCliente';
-        $this->cliente = Http::get(env('API_URL').'/client/getById?id='.$id)->json();
+        $this->cliente = Cliente::find($id);
 
     }
 
@@ -119,7 +122,8 @@ class Clientes extends Component
     /* Esta funcion permite incializar la variable para obtener el listado llamando y almacenandola en la variable
     cliente*/
     public function render(){
-        $this->clientes = Http::get('https://prismapi-docker.herokuapp.com/client/getAllComplete')->json();
-        return view('livewire.clientes');
+        return view('livewire.clientes', [
+            'clientes' => Cliente::paginate(5),
+        ]);
     }
 }

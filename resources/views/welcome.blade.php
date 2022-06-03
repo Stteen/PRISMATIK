@@ -1,15 +1,11 @@
 <x-layout>
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     <div class="content-page">
      <div class="container-fluid">
         <div class="row">
             <div class="col-lg-4">
                 <div class="card card-transparent card-block card-stretch card-height border-none">
                     <div class="card-body p-0 mt-lg-2 mt-0">
-                        <h3 class="mb-3">Hola, Alexander R</h3>
+                        <h3 class="mb-3">Hola, {{ auth()->user()->name }}</h3>
                         <p class="mb-0 mr-4">Su Dashboard le brinda vistas del rendimiento clave o el proceso comercial.</p>
                     </div>
                 </div>

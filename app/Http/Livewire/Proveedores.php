@@ -1,17 +1,16 @@
 <?php
 
 namespace App\Http\Livewire;
-use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Models\Proveedor;
 
 class Proveedores extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     /* Declaramos las variables necesarias para el manejo de los datos */
-    public $proveedores,$accion,$proveedor;
-
-    /* Declaramos la variable para el manejo de los mensajes de error */
-    public $mensaje=[];
+    public $accion,$proveedor;
 
     /* Declaramos las reglas del formulario para indicar cuales son requeridas y cuales no */
     public $rules=[
@@ -43,7 +42,7 @@ class Proveedores extends Component
     Inicializamos variable globla y le indicaremos que es de tipo array [] */
     public function crearproveedor(){
         $this->accion = 'formproveedor';
-        $this->proveedor = [];
+        $this->proveedor = new Proveedor;
     }
 
     /* Creamos una funcion que nos llamara a la peticion del listado de Proveedores y la llamamos $id para
@@ -51,14 +50,14 @@ class Proveedores extends Component
     le indicamos que la variable global proveedor enviara una peticion de tipo get con el id pasado mediante la peticion*/
     public function editarproveedor($id){
         $this->accion = 'formproveedor';
-        $this->proveedor = Http::get(env('API_URL').'/providers/getById?id='.$id)->json();
+        $this->proveedor = Proveedor::find($id);
     }
 
     /* Creamos una funcion que nos enviara al caso verProveedor con un requisito $id y le indicamos que envie la peticion
     a la api con la url e indicandole que es de tipo json */
     public function verproveedor($id){
         $this->accion = 'verproveedor';
-        $this->proveedor = Http::get(env('API_URL').'/providers/getById?id='.$id)->json();
+        $this->proveedor = Proveedor::find($id);
     }
 
     /* Agregamos una condicional si se tiene datos enviara una peticion de tipo put con el id enviado mediante la peticion
@@ -66,48 +65,19 @@ class Proveedores extends Component
     public function guardarproveedor(){
 
         $this->validate();
-        if(isset($this->proveedor['IdProveedores'])){
-            $response=Http::put(env('API_URL').'/providers/updateById',$this->proveedor)->json();
-        }
-        else{
-           $response=Http::post(env('API_URL').'/providers/create',$this->proveedor)->json();
-        }
+        $this->proveedor->save();
+        $this->accion = "";
 
-    /* En caso de que el envio sea verdadero enviara un mensaje de tipo success */
-        if($response!==FALSE){
-            $this->accion="";
-            $this->mensaje=["type"=>"success","message"=>"proveedor creado correctamente"];
-        }
-        /* En caso contrario mostrara una alerta de color roja indicando que no pudo ser creado */
-        else{
-            $this->mensaje=["type"=>"danger","message"=>"Error al crear el proveedor"];
-        }
 
     }
 
     /* Esta funcion envia una peticion con el requisito $id para activar el estado al proveedor */
-    public function activarproveedor($id){
+    public function cambiarEstado($id){
 
-        $response=Http::put(env('API_URL')."/providers/activateById?id=".$id)->json();
+       $this->proveedor = Proveedor::find($id);
+       $this->proveedor->bolEstado == 1? $this->proveedor->bolEstado = 0 : $this->proveedor->bolEstado = 1;
+         $this->proveedor->save();
 
-        if($response===TRUE){
-
-            $this->mensaje=["type"=>"success","message"=>"proveedor activado correctamente"];
-        }
-        else{
-            $this->mensaje=["type"=>"danger","message"=>"Error al activar el proveedor"];
-        }
-    }
-
-    /* Esta funcion envia una peticion con el requisito $id para desactivar el estado al proveedor */
-    public function desactivarproveedor($id){
-        $response=Http::delete(env('API_URL')."/providers/deleteById?id=".$id)->json();
-
-        if ($response===TRUE) {
-            $this->mensaje=["type"=>"success","message"=>"proveedor desactivado correctamente"];
-        } else {
-            $this->mensaje=["type"=>"danger","message"=>"Error al desactivar el proveedor"];
-        }
     }
 
     /* la funcion nos envia al default de nuestro switch para poder observar el listado de Proveedores */
@@ -120,8 +90,9 @@ class Proveedores extends Component
     a su vez returnando la vista de Proveedores*/
     public function render()
     {
-        $this->proveedores = Http::get('https://prismapi-docker.herokuapp.com/providers/getAllComplete')->json();
-        return view('livewire.proveedores');
+        return view('livewire.proveedores', [
+            'proveedores' => Proveedor::paginate(2),
+        ]);
     }
 
     public function mount()
