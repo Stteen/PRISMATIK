@@ -68,14 +68,14 @@
                     <td>{{$item->varTipoProducto}}</td>
                     <td>
                         <small>
-                            <b>REF:&nbsp;</b> {{$item->productoSale->varDescripcion}}<br />
-                            <b class="mt-1">Color:&nbsp;{{ $item->productoSale->varColor}}</b>
+                            <b>REF:&nbsp;</b> {{$item->producto->varDescripcion}} <br />
+                            <b class="mt-2">Color:&nbsp;{{ $item->producto->varColor}}</b><br />
                         </small>
                     </td>
                     <td>
                         <small>
-                            <b>REF:&nbsp;</b> {{$item->producto->varDescripcion}} <br />
-                            <b class="mt-2">Color:&nbsp;{{ $item->producto->varColor}}</b><br />
+                            <b>REF:&nbsp;</b> {{$item->productoSale->varDescripcion}}<br />
+                            <b class="mt-1">Color:&nbsp;{{ $item->productoSale->varColor}}</b>
                         </small>
                     </td>
                     <td>{{$item->cantidad}}</td>
@@ -104,14 +104,14 @@
                 <tr>
                     <td>
                         <small>
-                            <b>REF:&nbsp;</b> {{$item->productoSale->varDescripcion}}
-                            <b class="mt-1">Color:&nbsp;{{ $item->productoSale->varColor}}</b>
+                            <b>REF:&nbsp;</b> {{$item->producto->varDescripcion}} <br />
+                            <b class="mt-2">Color:&nbsp;{{ $item->producto->varColor}}</b><br />
                         </small>
                     </td>
                     <td>
-                    <small>
-                            <b>REF:&nbsp;</b> {{$item->producto->varDescripcion}} <br />
-                            <b class="mt-2">Color:&nbsp;{{ $item->producto->varColor}}</b><br />
+                        <small>
+                            <b>REF:&nbsp;</b> {{$item->productoSale->varDescripcion}}
+                            <b class="mt-1">Color:&nbsp;{{ $item->productoSale->varColor}}</b>
                         </small>
                     </td>
                     <td>{{$item->cantidad}}</td>

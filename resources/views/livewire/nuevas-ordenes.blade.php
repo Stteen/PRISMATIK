@@ -91,8 +91,18 @@
                                     @foreach($orden->ordenDetalles as $item)
                                     <tr>
                                         <td>{{$item['varTipoProducto']}}</td>
-                                        <td>{{$item->productoSale->varReferencia}}</td>
-                                        <td>{{$item->producto->varReferencia}}</td>
+                                        <td>
+                                            <small>
+                                            <b>REF:&nbsp;</b> {{$item->productoSale->varReferencia}} <br />
+                                            <b>{{ $item->productoSale->varDescripcion}}</b><br />
+                                            <b>Color:&nbsp;</b>{{$item->productoSale->varColor}}</small>
+                                        </td>
+                                        <td>
+                                            <small>
+                                            <b>REF:&nbsp;</b> {{$item->producto->varReferencia}} <br />
+                                            <b>{{ $item->producto->varDescripcion}}</b><br />
+                                            <b>Color:&nbsp;</b>{{$item->producto->varColor}}</small>
+                                        </td>
                                         <td>{{$item['cantidad']}}</td>
                                         <td>{{$item['varPrecio']}}</td>
                                         </td>

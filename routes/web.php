@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Select2Controller;
-
+use App\Http\Controllers\Controller;
+use App\Http\Livewire\OrdenServicio;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -63,4 +64,10 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/consultaOrdenes', function () {
         return view('consultaOrdenes');
     })->name('consultaOrdenes');
+
+   /*  Route::post('/orden-servicio/{$id}', [Controller::class, 'imprimePDF'])->name('imprimir'); */
+
+    Route::get('/ordenPDF/{id}',[Controller::class, 'imprimePDF']);
+
 });
+

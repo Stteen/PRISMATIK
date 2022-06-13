@@ -11,6 +11,7 @@ use App\Models\OrdenesServicio;
 use App\Models\Proveedor;
 use App\Models\OrdenDetalle;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Livewire\WithFileUploads;
 
 
 class OrdenServicio extends Component
@@ -75,17 +76,34 @@ class OrdenServicio extends Component
         $this->orden = OrdenesServicio::find($id);
 
         // Inicializamos un array vacio para el agregado de productos a la orden
-        $this->productoOrden = new OrdenDetalle;
-
+        $this->productoOrden = [];
+        $this->productoOrdenes = [];
     }
 
     // Funcion para agregar los productos a la orden de servicio 
     public function agregarProducto(){
+        $this->productoOrdenes[] = $this->productoOrden;
+        $this->productoOrden = [];
+    }
 
-        $this->productoOrden->orden_id = $this->orden->IdOrdenServicio; ;
-        $this->productoOrden->save();
-        
-        $this->editarOrdenServicio($this->orden->IdOrdenServicio);
+    // Funcion para insertar los valores en la BD
+    public function guardaProductos(){
+        if(isset($this->productoOrdenes)){
+            foreach($this->productoOrdenes as $productoOrden){
+                $ordenDetalle = new OrdenDetalle;
+                $ordenDetalle->orden_id = $this->orden->IdOrdenServicio;
+                $ordenDetalle->cantidad = $productoOrden['cantidad'];
+                $ordenDetalle->ref_entrada = $productoOrden['ref_entrada'];
+                $ordenDetalle->ref_salida = $productoOrden['ref_salida'];
+                $ordenDetalle->varTipoProducto = $productoOrden['varTipoProducto'];
+                $ordenDetalle->varPrecio = $productoOrden['varPrecio'];
+                $ordenDetalle->save();
+            }
+            $this->orden = OrdenesServicio::where('IdOrdenServicio', $this->orden->IdOrdenServicio)->first();
+            $this->orden->Estado = 'CREADO';
+            $this->orden->save();
+            $this->accion = "";
+        }
     }
 
     // Envia al caso para la vista de Ordenes de servicio pasando el parametro id
@@ -126,6 +144,7 @@ class OrdenServicio extends Component
             $this->orden->varConsecutivo = $prefijo.str_pad($proximo,5,'0',STR_PAD_LEFT);
             
          $this->orden->save();
+         $this->accion = "";
     }
 
     // Funcion para cambiar el estado y avisar al proveedor que ya el producto ha sido enviado

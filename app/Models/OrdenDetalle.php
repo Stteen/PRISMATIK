@@ -10,7 +10,6 @@ class OrdenDetalle extends Model
     use HasFactory;
     
     protected $table = 'TB_ORDENDETALLE';
-    protected $primaryKey = 'IdOrdenDetalle';
     public $timestamps = false;
    
 
