@@ -39,15 +39,15 @@ class NuevasOrdenes extends Component
         $this->accion = "";
     }
 
-    public function vistaRechazarOrden(){
-        $this->orden = OrdenesServicio::find($this->orden->IdOrdenServicio);
-        $this->accion = "rechazarOrden";
-    }
-
     public function rechazarOrden(){
         $this->orden->Estado = 'RECHAZADA';
         $this->orden->save();
         $this->accion = "";
+    }
+
+    public function vistaRechazarOrden(){
+        $this->orden = OrdenesServicio::find($this->orden->IdOrdenServicio);
+        $this->accion = "rechazarOrden";
     }
 
     public function render()

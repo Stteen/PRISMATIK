@@ -12,7 +12,7 @@
                             style="margin-left:0px; margin-right:0px;">
                             <div class="header-title">
                                 <h4 class="card-title">
-                                    Orden de Servicio #{{ $orden->IdOrdenServicio }}
+                                    Orden de Servicio #{{ $orden->varConsecutivo }}
                                 </h4>
                             </div>
                             <div class="">
@@ -92,16 +92,18 @@
                                     <tr>
                                         <td>{{$item['varTipoProducto']}}</td>
                                         <td>
-                                            <small>
-                                            <b>REF:&nbsp;</b> {{$item->productoSale->varReferencia}} <br />
-                                            <b>{{ $item->productoSale->varDescripcion}}</b><br />
-                                            <b>Color:&nbsp;</b>{{$item->productoSale->varColor}}</small>
-                                        </td>
-                                        <td>
-                                            <small>
+                                        <small>
                                             <b>REF:&nbsp;</b> {{$item->producto->varReferencia}} <br />
                                             <b>{{ $item->producto->varDescripcion}}</b><br />
-                                            <b>Color:&nbsp;</b>{{$item->producto->varColor}}</small>
+                                            <b>Color:&nbsp;</b>{{$item->producto->varColor}}
+                                        </small>
+                                        </td>
+                                        <td>
+                                        <small>
+                                            <b>REF:&nbsp;</b> {{$item->productoSale->varReferencia}} <br />
+                                            <b>{{ $item->productoSale->varDescripcion}}</b><br />
+                                            <b>Color:&nbsp;</b>{{$item->productoSale->varColor}}
+                                        </small>
                                         </td>
                                         <td>{{$item['cantidad']}}</td>
                                         <td>{{$item['varPrecio']}}</td>
@@ -122,7 +124,7 @@
                 <div class="card-header d-flex justify-content-between row" style="margin-left:0px; margin-right:0px;">
                     <div class="header-title">
                         <h4 class="card-title">
-                            Orden de Servicio #{{ $orden->IdOrdenServicio }}
+                            Orden de Servicio #{{ $orden->varConsecutivo }}
                         </h4>
                     </div>
                 </div>

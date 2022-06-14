@@ -44,12 +44,13 @@
                                     <label class="form-label">Fecha de Entrega</label>
                                     <input type="date" class="form-control" wire:model="orden.dtFechaEntrega" readOnly>
                                 </div>
-
+                                @if($orden->varObservacion != "")
                                 <div class="col-sm-12">
                                     <div class="alert alert-danger" role="alert">
                                         {{$orden->varObservacion}}
                                     </div>
                                 </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -95,6 +96,84 @@
                     </div>
                 </div>
             </div>
+
+            @if($orden->Estado == "FINALIZADO" || $orden->Estado == "PENDIENTE")
+                    <!-- Esta parte contiene la tabla para el seguimiento de los productos recibidos -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="col-sm-12 mb-3">
+                                <h4 class="card-title">
+                                    Seguimiento de Productos
+                                </h4>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <table class="table table-sm table-bordered table-responsive text-center">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 25%">Referencia Salida</th>
+
+                                        <th style="width: 25%">Referencia Entrada</th>
+
+                                        <th>Cantidad Total</th>
+
+                                        <th>Total Recibidas</th>
+
+                                        <th>Total Malas</th>
+                                        
+                                        <th>Malas</th>
+                                        @if($orden->Estado != "FINALIZADO")
+                                        <th>Acciones</th>
+                                        @endif
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($orden->ordenDetalles->where('enviadas', '!=', '') as $key => $item)
+                                    <tr>
+                                        <td>
+                                            <small>
+                                                <b>REF:&nbsp;</b> {{$item->productoSale->varReferencia}} <br />
+                                                <b>{{ $item->productoSale->varDescripcion}}</b><br />
+                                                <b>Color:&nbsp;</b>{{$item->productoSale->varColor}}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <small>
+                                                <b>REF:&nbsp;</b> {{$item->producto->varReferencia}} <br />
+                                                <b>{{ $item->producto->varDescripcion}}</b><br />
+                                                <b>Color:&nbsp;</b>{{$item->producto->varColor}}
+                                            </small>
+                                        </td>
+                                        <td>{{$item->cantidad}}</td>
+                                        <td>{{$item->enviadas?$item->enviadas:'Sin ingreso'}}</td>
+                                        <td>{{$item->malas?$item->malas:'Sin ingreso'}}</td>
+                                        <td> 
+                                        @if($item->pendientes > 0)
+                                            <input type="text" class="form-control"
+                                            wire:model="productoOrden.{{$key}}.malas" />
+                                            @else
+                                            <b>Este producto Finalizo</b>
+                                            @endif
+                                        </td>
+                                        @if($item->pendientes > 0)
+                                        <td>
+                                        <button wire:click="agregaMalas({{ $item->id }})"
+                                            class="btn btn-sm btn-success">Agregar</button>
+                                        </td>
+                                        @endif
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        @if($item->Estado == 'PENDIENTE')
+                        <div class="col-sm-12 text-right">
+                            <button wire:click="finalizaOrden()" class="btn btn-sm btn-success px-3 mb-3 ">Finalizar Orden</button>
+                        </div>
+                        @endif
+                    </div>
+                    @endif
 
 
                         @break
@@ -348,6 +427,12 @@
 
                                 @elseif($orden->Estado == 'RECIBIDO')
                                 <span class="badge badge-success">Recibido</span>
+
+                                @elseif($orden->Estado == 'PENDIENTE')
+                                <span class="badge badge-warning">Pendiente</span>
+
+                                @elseif($orden->Estado == 'FINALIZADO')
+                                <span class="badge badge-danger">Finalizado</span>
                                 @endif
                             </td>
                             <td>{{$orden->varResponsable}}</td>

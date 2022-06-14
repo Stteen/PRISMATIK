@@ -10,18 +10,19 @@ use App\Models\OrdenDetalle;
 class OrdenProceso extends Component
 {
     use WithPagination;
-    public $accion, $orden, $ordenDetalle;
+    public $accion, $orden, $detalles;
     protected $paginationTheme = 'bootstrap';
 
     public $rules = [
-        'orden.ordenDetalle.*.enviadas' => 'required',
+        'detalles.*.enviadas' => 'required',
     ];
 
     public function render()
     {
         return view('livewire.orden-proceso', [
-            'ordenes' => OrdenesServicio::whereIn('Estado', ['ENVIADO','RECIBIDO'])
+            'ordenes' => OrdenesServicio::whereIn('Estado', ['RECIBIDO','PENDIENTE'])
             ->where('varProveedor', auth()->user()->proveedor_id)
+            ->orderBy('IdOrdenServicio', 'DESC')
             ->paginate(10),
         ]);
     }
@@ -38,10 +39,35 @@ class OrdenProceso extends Component
 
     public function envioParcial($id){
         $this->validate();
-        $this->ordenDetalle = OrdenDetalle::find($id);
-        $this->ordenDetalle->enviadas = $this->orden->ordenDetalle['enviadas'];
-        dd($this->ordenDetalle);
-        $this->ordenDetalle->push();
+        $ordenDetalles = OrdenDetalle::find($id);
+        
+        foreach($this->detalles as $key => $envio) {
+             $ordenDetalles->enviadas = $envio['enviadas']; 
+          
+        /* Si la orden no contiene pendientes y la cantidad es mayor que le cantidad que envia alamacenara los pendientes a enviar */
+           if($ordenDetalles->cantidad >= $envio || $ordenDetalles->pendientes == ''){
+            $ordenDetalles->pendientes = $ordenDetalles->cantidad - $envio['enviadas'];
+
+            $this->orden->Estado = 'PENDIENTE';
+            $this->orden->save();
+        } 
+        
+        /* En caso de que pendientes exista la resta se le hara directamente al pendientes y la cantidad enviada */
+          elseif($ordenDetalles->pendientes !== ""){
+            $ordenDetalles->enviadas = $ordenDetalles->enviadas + $envio['enviadas']; 
+            $ordenDetalles->pendientes = $ordenDetalles->pendientes - $ordenDetalles->enviadas;
+            if($ordenDetalles->pendientes <= $ordenDetalles->pendientes){
+                $ordenDetalles->pendientes = 0;
+            }
+            $this->orden->Estado = 'PENDIENTE';
+            $this->orden->save();
+        }  
+    }
+
+        $ordenDetalles->save();
+        $this->detalles = [];
+        /* dd($this->ordenDetalles);
+        $this->ordenDetalle->push(); */
         
     }
 

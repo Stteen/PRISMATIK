@@ -12,7 +12,7 @@
                             style="margin-left:0px; margin-right:0px;">
                             <div class="header-title">
                                 <h4 class="card-title">
-                                    Orden de Servicio #{{ $orden->IdOrdenServicio }}
+                                    Orden de Servicio #{{ $orden->varConsecutivo }}
                                 </h4>
                             </div>
                             <div class="">
@@ -136,20 +136,22 @@
                                     @foreach($orden->ordenDetalles as $key => $item)
                                     <tr>
                                         <td>
-                                            <small>
-                                            <b>REF:&nbsp;</b> {{$item->productoSale->varReferencia}} <br />
-                                            <b>{{ $item->productoSale->varDescripcion}}</b><br />
-                                            <b>Color:&nbsp;</b>{{$item->productoSale->varColor}}</small>
-                                        </td>
-                                        <td>
-                                            <small>
+                                        <small>
                                             <b>REF:&nbsp;</b> {{$item->producto->varReferencia}} <br />
                                             <b>{{ $item->producto->varDescripcion}}</b><br />
-                                            <b>Color:&nbsp;</b>{{$item->producto->varColor}}</small>
+                                            <b>Color:&nbsp;</b>{{$item->producto->varColor}}
+                                        </small>
+                                        </td>
+                                        <td>
+                                        <small>
+                                            <b>REF:&nbsp;</b> {{$item->productoSale->varReferencia}} <br />
+                                            <b>{{ $item->productoSale->varDescripcion}}</b><br />
+                                            <b>Color:&nbsp;</b>{{$item->productoSale->varColor}}
+                                        </small>
                                         </td>
                                         <td>{{$item['cantidad']}}</td>
                                         <td>
-                                            <input type="text" class="form-control" wire:model="orden.ordenDetalle.{{$key}}.enviadas" />
+                                            <input type="text" class="form-control" wire:model="detalles.{{$key}}.enviadas" />
                                         </td>
                                         <td>
                                             <button wire:click="envioParcial({{ $item->id }})" class="btn btn-sm btn-success">Enviar</button>
@@ -186,12 +188,8 @@
                                             <td>{{$item->dtFecha}}</td>
                                             <td>{{$item->dtFechaEntrega}}</td>
                                             <td>
-                                    @if($item->Estado == "ENVIADO")
-                                        <button wire:click="recibeProveedor({{$item->IdOrdenServicio}})" class="btn btn-sm btn-primary">Recibir</button>
-                                        <button wire:click="verOrden({{$item->IdOrdenServicio}})" class="btn btn-sm btn-info">Ver</button>
-                                    @elseif($item->Estado == "RECIBIDO")
                                         <button wire:click="diligenciar({{$item->IdOrdenServicio}})" class="btn btn-sm btn-warning">Diligenciar</button>
-                                        @endif
+                                        
                                             </td>
                                         </tr>
                                     @endforeach

@@ -86,7 +86,7 @@ class OrdenServicio extends Component
         $this->productoOrden = [];
     }
 
-    // Funcion para insertar los valores en la BD
+    // Funcion para insertar los valores de los productos seleccionados en la BD
     public function guardaProductos(){
         if(isset($this->productoOrdenes)){
             foreach($this->productoOrdenes as $productoOrden){

@@ -80,7 +80,12 @@
                     </td>
                     <td>{{$item->cantidad}}</td>
                     <td>{{$item->varPrecio}}</td>
-                    <td>Precio Total</td>
+                    <td>  
+                    @php
+                       $subTotal = $item->varPrecio * $item->cantidad;
+                       
+                    @endphp
+                    {{ number_format($subTotal, 2) }}$</td>
                 </tr>
                 @endforeach
             </tbody>

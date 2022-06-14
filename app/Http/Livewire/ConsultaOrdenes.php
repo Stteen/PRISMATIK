@@ -17,7 +17,7 @@ class ConsultaOrdenes extends Component
     }
 
     public function pendientes($id){
-        $this->pendientes = OrdenesServicio::where('varProveedor', $id)->where('Estado', 'CREADO')->get();
+        $this->pendientes = OrdenesServicio::where('varProveedor', $id)->where('Estado', 'ENVIADO')->get();
         $this->accion = "Pendientes";
     }
 
@@ -27,7 +27,7 @@ class ConsultaOrdenes extends Component
     }
 
     public function cerradas($id){
-        $this->cerradas = OrdenesServicio::where('varProveedor', $id)->where('Estado', 'CERRADO')->get();
+        $this->cerradas = OrdenesServicio::where('varProveedor', $id)->where('Estado', 'FINALIZADO')->get();
         $this->accion = "Cerradas";
     }
 

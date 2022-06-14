@@ -326,7 +326,7 @@
                                 <button wire:click="pendientes({{$item->proveedor->IdProveedores}})"
                                     class="btn btn-warning px-2 pl-3 pr-3 border-0"
                                     style="background-color:#f9f0ec; border-radius: 100px;"><b style="color:#dd2222;">
-                                        {{ $item->where('Estado', 'CREADO')->where('varProveedor', $item->proveedor->IdProveedores)->count() }}</b></button>
+                                        {{ $item->where('Estado', 'ENVIADO')->where('varProveedor', $item->proveedor->IdProveedores)->count() }}</b></button>
                             </td>
                             <td>
                                 <button wire:click="abiertas({{$item->proveedor->IdProveedores}})"
@@ -338,7 +338,7 @@
                                 <button wire:click="cerradas({{$item->proveedor->IdProveedores}})"
                                     class="btn px-2 pl-3 pr-3 border-0"
                                     style="background-color:#D8D8D8; border-radius: 100px;"><b style="color:#322F2F;">
-                                        {{ $item->where('Estado', 'CERRADO')->where('varProveedor', $item->proveedor->IdProveedores)->count() }}</b></button>
+                                        {{ $item->where('Estado', 'FINALIZADO')->where('varProveedor', $item->proveedor->IdProveedores)->count() }}</b></button>
                             </td>
                             <td>
                                 <button wire:click="totalGeneradas({{$item->proveedor->IdProveedores}})"

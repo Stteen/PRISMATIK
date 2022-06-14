@@ -26,9 +26,26 @@ class OrdenDespachada extends Component
     public function render()
     {
         return view('livewire.orden-despachada', [
-            'ordenes' => OrdenesServicio::where('Estado', 'DESPACHADA')
+            'ordenes' => OrdenesServicio::where('Estado', 'ENVIADO')
             ->where('varProveedor', auth()->user()->proveedor_id)
             ->paginate(10),
         ]);
     }
+
+    public function verOrden($id){
+        $this->orden = OrdenesServicio::find($id);
+        $this->accion = 'verOrden';
+    }
+
+    
+    public function recibeProveedor($id){
+        $this->orden = OrdenesServicio::find($id);
+        $this->orden->Estado = 'RECIBIDO';
+        $this->orden->save(); 
+    }
+
+    public function volver(){
+        $this->accion = '';
+    }
+
 }

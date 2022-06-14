@@ -69,5 +69,7 @@ Route::group(['middleware' => 'auth'], function(){
 
     Route::get('/ordenPDF/{id}',[Controller::class, 'imprimePDF']);
 
+    Route::get('/PDFProveedor/{id}',[Controller::class, 'imprimePDFProveedor']);
+
 });
 
