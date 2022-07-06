@@ -121,13 +121,13 @@
                             <table class="table table-sm table-bordered table-responsive text-center">
                                 <thead>
                                     <tr>
-                                        <th style="width: 40%">Referencia Salida</th>
+                                        <th style="width: 35%">Referencia Salida</th>
 
-                                        <th style="width: 40%">Referencia Entrada</th>
+                                        <th style="width: 35%">Referencia Entrada</th>
 
-                                        <th style="width: 10%">Cantidad</th>
+                                        <th style="width: 15%">Cantidad</th>
 
-                                        <th style="width: 10%">Cantidad a Enviar</th>
+                                        <th style="width: 15%">Cantidad a Enviar</th>
 
                                         <th>Acciones</th>
                                     </tr>
@@ -149,12 +149,18 @@
                                             <b>Color:&nbsp;</b>{{$item->productoSale->varColor}}
                                         </small>
                                         </td>
-                                        <td>{{$item['cantidad']}}</td>
                                         <td>
-                                            <input type="text" class="form-control" wire:model="detalles.{{$key}}.enviadas" />
+ 
+                                            {{$item['cantidad']}}
+
                                         </td>
                                         <td>
+                                            <input type="number" class="form-control" wire:model="detalles.{{$key}}.enviadas" min='0' max=""/>
+                                        </td>
+                                        <td>
+
                                             <button wire:click="envioParcial({{ $item->id }})" class="btn btn-sm btn-success">Enviar</button>
+
                                         </td>
                                     </tr>
                                     @endforeach

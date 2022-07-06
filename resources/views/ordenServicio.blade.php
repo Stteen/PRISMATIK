@@ -1,4 +1,5 @@
 <x-layout>
 
         @livewire('orden-servicio')
-    </x-layout>
+
+</x-layout>

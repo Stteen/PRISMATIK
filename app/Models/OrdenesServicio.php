@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrdenesServicio extends Model
 {
+    use HasFactory;
     protected $table = "TB_ORDENSERVICIO";
     protected $primaryKey = 'IdOrdenServicio';
     public $timestamps = false;
@@ -23,6 +24,4 @@ class OrdenesServicio extends Model
         return $this->belongsTo('App\Models\Cliente','varCliente','IdClientes');
     }
 
-
-    use HasFactory;
 }

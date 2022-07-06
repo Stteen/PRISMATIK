@@ -1,16 +1,36 @@
-<div class="w-100" wire:ignore>
+<div class="w-100 h-100" wire:ignore>
     <div>
-    <select id="{{$select2_id}}" class='form-select sel2 form-control' wire:model="{{$model}}">
+    <select id="{{$select2_id}}" class='form-control' wire:model="{{$model}}" >
 
     </select>
     </div>
+
     <script>
         $('#{{$select2_id}}').select2(
             {
+                language:{
+                    inputTooShort: function () {
+                        return 'Ingrese valor a buscar';
+                    },  
+                    loadingMore: function () {
+		                return "Cargando valores...";
+	                },
+                    maximumSelected: function () {
+		                return "3";
+	                },
+                    noResults: function() { 
+                        return 'Valores no encontrado'; 
+                    },
+                    searching: function () {
+		                return "Buscando...";
+	                }
+
+                },
                 @if($attachToModal!='')
                 dropdownParent: $('#{{ $attachToModal }}'),
                 @endif
-                minimumInputLength: 4,
+                minimumInputLength: 3,
+                theme: "classic",
                 ajax: {
                     delay: 250,
                     url: '/select2',
@@ -25,8 +45,6 @@
                             @endforeach
 
                             @endif
-
-
 
                             action: '{{$action}}',
                             _token: '{{csrf_token()}}'

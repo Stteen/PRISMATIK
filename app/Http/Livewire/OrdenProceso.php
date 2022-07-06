@@ -2,15 +2,19 @@
 
 namespace App\Http\Livewire;
 
+use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\OrdenesServicio;
 use App\Models\OrdenDetalle;
+use App\Models\User;
+use App\Models\Proveedor;
 
 class OrdenProceso extends Component
 {
     use WithPagination;
     public $accion, $orden, $detalles;
+    
     protected $paginationTheme = 'bootstrap';
 
     public $rules = [
@@ -27,6 +31,10 @@ class OrdenProceso extends Component
         ]);
     }
 
+    public function mount(){
+      
+    }
+
     public function verOrden($id){
         $this->orden = OrdenesServicio::find($id);
         $this->accion = 'verOrden';
@@ -34,11 +42,13 @@ class OrdenProceso extends Component
 
     public function diligenciar($id){
         $this->orden = OrdenesServicio::find($id);
+        $this->detalles = [];
         $this->accion = 'diligenciarOrden';
     }
 
     public function envioParcial($id){
         $this->validate();
+      
         $ordenDetalles = OrdenDetalle::find($id);
         
         foreach($this->detalles as $key => $envio) {
@@ -62,8 +72,27 @@ class OrdenProceso extends Component
             $this->orden->Estado = 'PENDIENTE';
             $this->orden->save();
         }  
-    }
 
+        $responsable = User::where('name', $this->orden->varResponsable)->first();
+        $proveedor = Proveedor::where('idProveedores', $this->orden->varProveedor)->first();
+     
+    
+        $apiURL = "https://api.ultramsg.com/instance10658/messages/chat";
+        $postFields = [
+        'token' => "7eyim2lkk21gjrns",
+        'to' => "57".$responsable->telephone,
+        'body' => 'El proveedor '.$proveedor->varNombreRazon.' ha enviado '.$envio['enviadas'].'/U productos de la orden '.$this->orden->varConsecutivo.' ingrese al maestro de ordenes al siguiente link',
+        'link' => 'www.prismaap.com',
+        'priority' => "1",
+        'referenceId' => ''
+        ];
+        $headers = [
+            "Content-Type', 'text/plain"
+        ];
+    
+        $response = Http::withHeaders($headers)->post($apiURL, $postFields);
+    
+    }
         $ordenDetalles->save();
         $this->detalles = [];
         /* dd($this->ordenDetalles);
@@ -78,6 +107,25 @@ class OrdenProceso extends Component
     public function recibeProveedor($id){
         $this->orden = OrdenesServicio::find($id);
         $this->orden->Estado = 'RECIBIDO';
+        
+        $responsable = User::where('name', $this->orden->varResponsable)->first();
+        $proveedor = Proveedor::where('idProveedores', $this->orden->varProveedor)->first();
+
+        $apiURL = "https://api.ultramsg.com/instance10658/messages/chat";
+        $postFields = [
+        'token' => "7eyim2lkk21gjrns",
+        'to' => "57".$responsable->telephone,
+        'body' => 'El proveedor'.$proveedor->varNombreRazon.' ha recibido la orden '.$this->orden->varConsecutivo.' y rectificado las cantidades de los productos enviados',
+        'link' => 'www.prismaap.com',
+        'priority' => "1",
+        'referenceId' => ''
+        ];
+        $headers = [
+            "Content-Type', 'text/plain"
+        ];
+
+        $response = Http::withHeaders($headers)->post($apiURL, $postFields);
+
         $this->orden->save(); 
     }
 }

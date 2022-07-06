@@ -9,7 +9,7 @@ class Select2 extends Component
 
     public $model, $action, $default, $method, $select2_id,$attachToModal,$restrictors;
 
-    public function __construct($model, $action, $method='', $default='', $attachToModal='',$restrictors='')
+    public function __construct($model='', $action='', $method='', $default='', $attachToModal='',$restrictors='')
     {
         $this->model = $model;
         $this->action = $action;

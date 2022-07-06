@@ -85,6 +85,10 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                            <div class="col-sm-12 p-2">
+                            <button wire:click="recibeProveedor"
+                                                class="btn btn-sm btn-primary">Recibir</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -116,8 +120,6 @@
                                         <td>{{ $orden->dtFechaEntrega }}</td>
                                         <td>{{ $orden->varConsecutivo }}</td>
                                         <td>
-                                            <button wire:click="recibeProveedor({{$orden->IdOrdenServicio}})"
-                                                class="btn btn-sm btn-primary">Recibir</button>
                                             <button wire:click="verOrden({{$orden->IdOrdenServicio}})"
                                                 class="btn btn-sm btn-info">Ver</button>
                                         </td>

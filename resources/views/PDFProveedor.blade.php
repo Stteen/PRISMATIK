@@ -55,10 +55,10 @@
             <thead>
                 <tr>
                     <th scope="col">Categoria</th>
-                    <th scope="col">Producto Salida</th>
                     <th scope="col">Producto Entrada</th>
+                    <th scope="col">Producto Salida</th>
                     <th scope="col">Cantidad</th>
-                    <th scope="col">Precio</th>
+                    <th scope="col">Valor U.</th>
                     <th scope="col">Subtotal</th>
                 </tr>
             </thead>
@@ -67,25 +67,25 @@
                 <tr>
                     <td>{{$item->varTipoProducto}}</td>
                     <td>
+                    <small>
+                            <b>REF:&nbsp;</b> {{$item->productoSale->varDescripcion}}<br />
+                            <b class="mt-1">Color:&nbsp;{{ $item->productoSale->varColor}}</b>
+                    </small>
+                    </td>
+                    <td>
                         <small>
                             <b>REF:&nbsp;</b> {{$item->producto->varDescripcion}} <br />
                             <b class="mt-2">Color:&nbsp;{{ $item->producto->varColor}}</b><br />
                         </small>
                     </td>
-                    <td>
-                        <small>
-                            <b>REF:&nbsp;</b> {{$item->productoSale->varDescripcion}}<br />
-                            <b class="mt-1">Color:&nbsp;{{ $item->productoSale->varColor}}</b>
-                        </small>
-                    </td>
                     <td>{{$item->cantidad}}</td>
-                    <td>{{$item->varPrecio}}</td>
+                    <td>{{ number_format($item->varPrecio) }}</td>
                     <td>  
                     @php
                        $subTotal = $item->varPrecio * $item->cantidad;
                        
                     @endphp
-                    {{ number_format($subTotal, 2) }}$</td>
+                    {{ number_format($subTotal) }}</td>
                 </tr>
                 @endforeach
             </tbody>
@@ -133,6 +133,7 @@
         </table>
     </div>
     @endif
+
 </body>
 
 </html>

@@ -39,4 +39,11 @@ class Controller extends BaseController
         ]);
     }
 
+    public function index(){
+        $alo = "hola mundo";
+        $descripcion = "tu puta madre";
+
+        return view('pruebaRoute', compact('alo', 'descripcion'));
+    }
+
 }

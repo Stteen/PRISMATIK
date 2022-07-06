@@ -44,6 +44,7 @@
                                     <label class="form-label">Fecha de Entrega</label>
                                     <input type="date" class="form-control" wire:model="orden.dtFechaEntrega" readOnly>
                                 </div>
+
                                 @if($orden->varObservacion != "")
                                 <div class="col-sm-12">
                                     <div class="alert alert-danger" role="alert">
@@ -51,6 +52,18 @@
                                     </div>
                                 </div>
                                 @endif
+
+                                @if($orden->Estado == "RECHAZADA")
+                                <div class="col-sm-12 row">
+                                    <div class="col-sm-6">
+                                    <button wire:click="Finalizar" class="btn btn-sm btn-danger p-2" >Finalizar</button>
+                                    </div>
+                                    <div class="col-sm-6 text-right">
+                                    <button wire:click="Reabrir" class="btn btn-sm btn-success p-2" >Re-abrir </button>
+                                    </div>
+                                </div>
+                                @endif
+
                             </div>
                         </div>
                     </div>
@@ -273,6 +286,13 @@
                                     <label class="form-label">Fecha de Entrega *</label>
                                     <input type="date" class="form-control" wire:model="orden.dtFechaEntrega" readOnly>
                                 </div>
+
+                                @if($orden->Estado == "REABIERTA")
+                                <div class="mb-3 col-md-4">
+                                    <label class="form-label">Fecha real de Entrega</label>
+                                    <input type="date" class="form-control" wire:model="orden.cambio_fecha" >
+                                </div>
+                                @endif
                           
                             </div>
 
@@ -310,7 +330,10 @@
                                     <th style="width: 30%">
                                     <select type="selected" class="form-control" wire:model="productoOrden.varTipoProducto">
                                         <option>Seleccione...</option>
-                                        <option value="Grifería Lavamanos">Grifería Lavamanos</option>
+                                        <option value="Grifería Lavamanos Alta">Grifería Lavamanos Alta</option>
+                                        <option value="Grifería Lavamanos Media">Grifería Lavamanos Media</option>
+                                        <option value="Grifería Lavamanos Baja">Grifería Lavamanos Baja</option>
+                                        <option value="Grifería Lavamanos de Pared">Grifería Lavamanos de Pared</option>
                                         <option value="Grifería Lavaplatos">Grifería Lavaplatos</option>
                                         <option value="Grifería de Ducha">Grifería de Ducha</option>
                                         <option value="Regadera o Ducha">Regadera o Ducha</option>
@@ -342,7 +365,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                 @foreach($productoOrdenes as $item)
+                                @foreach($orden->ordenDetalles as $item)
                                 <tr>
                                     <td>{{$item['varTipoProducto']}}</td>
                                     <td>
@@ -363,7 +386,33 @@
                                     </td>
                                     <td>{{$item['cantidad']}}</td>
                                     <td>{{$item['varPrecio']}}</td>
-                                    <td><button class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>
+                                    <td><button wire:click="eliminaProductos({{$item->id}})" class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>
+                                    </td>
+                                </tr>
+                                @endforeach  
+
+                                @foreach($productoOrdenes as $key => $item)
+                                <tr>
+                                    <td>{{$item['varTipoProducto']}}</td>
+                                    <td>
+                                        @if($ref_salida = App\Models\Producto::where('IdPortafolio',$item['ref_salida'])->first())
+                                        <small>
+                                            <b>REF:&nbsp;</b> {{$ref_salida->varReferencia}} <br />
+                                            <b>{{ $ref_salida->varDescripcion}}</b><br />
+                                            <b>Color:&nbsp;</b>{{$ref_salida->varColor}}</small>
+                                        @endif
+                                    </td>
+                                    <td>
+                                    @if($ref_entrada = App\Models\Producto::where('IdPortafolio',$item['ref_entrada'])->first())
+                                            <small>
+                                            <b>REF:&nbsp;</b> {{$ref_entrada->varReferencia}} <br />
+                                            <b>{{ $ref_entrada->varDescripcion}}</b><br />
+                                            <b>Color:&nbsp;</b>{{$ref_entrada->varColor}}</small>
+                                        @endif
+                                    </td>
+                                    <td>{{$item['cantidad']}}</td>
+                                    <td>{{$item['varPrecio']}}</td>
+                                    <td><button wire:click="eliminaProducto({{$key}})" class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -408,7 +457,11 @@
                         @foreach($ordenes as $orden)
                         <tr>
                             <td>{{$orden->varConsecutivo}}</td>
-                            <td>{{$orden->dtFecha}}</td>
+                            <td>
+
+                                {{$orden->dtFecha}}
+
+                            </td>
                             <td>
                                 @if($orden->Estado == '')
                                 <span class="badge badge-warning">En Diligenciamiento</span>
@@ -433,6 +486,9 @@
 
                                 @elseif($orden->Estado == 'FINALIZADO')
                                 <span class="badge badge-danger">Finalizado</span>
+
+                                @elseif($orden->Estado == 'REABIERTA')
+                                <span class="badge badge-primary">Re-abierta</span>
                                 @endif
                             </td>
                             <td>{{$orden->varResponsable}}</td>
@@ -440,7 +496,7 @@
                             <button wire:click="verOrdenServicio({{ $orden->IdOrdenServicio }}) " class="btn btn-sm btn-info">Ver</button>
                             <button wire:click="imprimePDF({{ $orden->IdOrdenServicio }}) " class="btn btn-sm btn-info">Imprimir PDF</button>
                            
-                            @if($orden->Estado == '')
+                            @if($orden->Estado == '' || $orden->Estado == 'REABIERTA')
                                 <button wire:click="editarOrdenServicio({{ $orden->IdOrdenServicio }})"
                                     class="btn btn-sm btn-warning">Diligenciar</button>
                                     @elseif($orden->Estado == 'CREADO')
@@ -449,7 +505,7 @@
                                     class="btn btn-sm btn-success">Enviar&nbsp;<i class="fas fa-paper-plane"></i></button>
                                     @elseif($orden->Estado == 'ENVIADO')
 
-                                    @endif
+                            @endif
                             </td>
                         </tr>
                         @endforeach

@@ -23,13 +23,14 @@ class OrdenServicio extends Component
     /* Inicializamos las variables necesarias para el funcionamiento*/
     public $accion, $orden, 
     $proveedores, $clientes, $productos, 
-    $productoOrden, $productoOrdenes;
+    $productoOrden, $productoOrdenes, $detalles;
 
     /* Declaramos las reglas para el formulario */
     public $rules=[
         "orden.varProveedor" => "required",
         "orden.varTipoOrden" => "required",
         "orden.dtFechaEntrega" => "",
+        "orden.cambio_fecha" => "",
         "orden.varCliente" => "required",
         "productoOrden.varTipoProducto" => "",
         "productoOrden.cantidad" => "",
@@ -68,7 +69,6 @@ class OrdenServicio extends Component
     public function editarOrdenServicio($id){
         // Reseteamos los errores de validacion al entrar a la vista
         $this->resetValidation();
-      
         // Enviamos a la accion de la vista Formulario
         $this->accion = 'formOrdenServicio';
 
@@ -84,6 +84,31 @@ class OrdenServicio extends Component
     public function agregarProducto(){
         $this->productoOrdenes[] = $this->productoOrden;
         $this->productoOrden = [];
+
+    }
+
+    // Elimina los valores que hayan sido agregados temporalmente como array
+    public function eliminaProducto($id){ 
+       unset($this->productoOrdenes[$id]);
+    }
+
+    // Elimina los valores que hayan sido agregados en la persistencia
+    public function eliminaProductos($id){ 
+        $producto = ordenDetalle::find($id);
+        $producto->delete();
+        $this->editarOrdenServicio($this->orden->IdOrdenServicio);
+    }
+
+    public function Finalizar(){
+        $this->orden->Estado = "FINALIZADO";
+        $this->orden->save();
+        $this->accion = "";
+    }
+
+    public function Reabrir(){
+        $this->orden->Estado = "REABIERTA";
+        $this->orden->save();
+        $this->editarOrdenServicio($this->orden->IdOrdenServicio);
     }
 
     // Funcion para insertar los valores de los productos seleccionados en la BD
@@ -101,6 +126,25 @@ class OrdenServicio extends Component
             }
             $this->orden = OrdenesServicio::where('IdOrdenServicio', $this->orden->IdOrdenServicio)->first();
             $this->orden->Estado = 'CREADO';
+
+            $proveedor = Proveedor::where('idProveedores', $this->orden->varProveedor)->first();
+            
+            $apiURL = "https://api.ultramsg.com/instance10658/messages/chat";
+            $link = "https://www.prismaap.com/nuevasOrdenes";
+            $postFields = [
+            'token' => "7eyim2lkk21gjrns",
+            'to' => "57".$proveedor->varTelefono,
+            'body' => 'La orden '.$this->orden->varConsecutivo.' se encuentra pendiente de revisión ingrese a nuevas ordenes al siguiente link',
+            'link' => 'https://www.prismaap.com/nuevasOrdenes',
+            'priority' => "1",
+            'referenceId' => ''
+            ];
+            $headers = [
+                "Content-Type', 'text/plain"
+            ];
+
+            $response = Http::withHeaders($headers)->post($apiURL, $postFields);
+            
             $this->orden->save();
             $this->accion = "";
         }
@@ -142,7 +186,24 @@ class OrdenServicio extends Component
                
             }
             $this->orden->varConsecutivo = $prefijo.str_pad($proximo,5,'0',STR_PAD_LEFT);
+
+            $proveedor = Proveedor::where('idProveedores', $this->orden->varProveedor)->first();
             
+            $apiURL = "https://api.ultramsg.com/instance10658/messages/chat";
+            $postFields = [
+            'token' => "7eyim2lkk21gjrns",
+            'to' => "57".$proveedor->varTelefono,
+            'body' => 'Valsan te ha generado la siguiente orden '.$this->orden->varConsecutivo,
+            'link' => 'www.prismaap.com',
+            'priority' => "1",
+            'referenceId' => ''
+            ];
+            $headers = [
+                "Content-Type', 'text/plain"
+            ];
+
+            $response = Http::withHeaders($headers)->post($apiURL, $postFields);
+  
          $this->orden->save();
          $this->accion = "";
     }
@@ -151,6 +212,25 @@ class OrdenServicio extends Component
     public function enviaProducto($id){
         $this->orden = OrdenesServicio::find($id);
         $this->orden->Estado = 'ENVIADO';
+        
+        $proveedor = Proveedor::where('idProveedores', $this->orden->varProveedor)->first();
+            
+        $apiURL = "https://api.ultramsg.com/instance10658/messages/chat";
+        $link = "https://www.prismaap.com/nuevasOrdenes";
+        $postFields = [
+        'token' => "7eyim2lkk21gjrns",
+        'to' => "57".$proveedor->varTelefono,
+        'body' => 'La orden '.$this->orden->varConsecutivo.' se encuentra en ruta para la revision ingrese al siguiente para las ordenes en proceso link',
+        'link' => 'https://www.prismaap.com/nuevasOrdenes',
+        'priority' => "1",
+        'referenceId' => ''
+        ];
+        $headers = [
+            "Content-Type', 'text/plain"
+        ];
+
+        $response = Http::withHeaders($headers)->post($apiURL, $postFields);
+        
         $this->orden->save();
     }
 
@@ -158,7 +238,7 @@ class OrdenServicio extends Component
     public function render(){
         // Nos regresa la vista de Ordenes de Servicio
         return view('livewire.orden-servicio', [
-            'ordenes' => OrdenesServicio::orderBy('IdOrdenServicio', 'DESC')->paginate(5),
+            'ordenes' => OrdenesServicio::orderBy('IdOrdenServicio', 'DESC')->paginate(10),
         ]);
     }
 
@@ -170,6 +250,7 @@ class OrdenServicio extends Component
 
     public function mount()
     {
+
     }
 
     public function imprimePDF($id){

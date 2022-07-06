@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Carbon\Carbon;
@@ -35,12 +36,50 @@ class NuevasOrdenes extends Component
 
     public function aprobarOrden(){
         $this->orden->Estado = 'APROBADA';
+
+        $responsable = User::where('name', $this->orden->varResponsable)->first();
+        $proveedor = Proveedor::where('idProveedores', $this->orden->varProveedor)->first();
+
+        $apiURL = "https://api.ultramsg.com/instance10658/messages/chat";
+        $postFields = [
+        'token' => "7eyim2lkk21gjrns",
+        'to' => "57".$responsable->telephone,
+        'body' => 'El proveedor '.$proveedor->varNombreRazon.' ha aprobado la orden '.$this->orden->varConsecutivo.' para revisar ingresa al siguiente link',
+        'link' => 'www.prismaap.com',
+        'priority' => "1",
+        'referenceId' => ''
+        ];
+        $headers = [
+            "Content-Type', 'text/plain"
+        ];
+
+        $response = Http::withHeaders($headers)->post($apiURL, $postFields);
+
         $this->orden->save();
         $this->accion = "";
     }
 
     public function rechazarOrden(){
         $this->orden->Estado = 'RECHAZADA';
+        
+        $responsable = User::where('name', $this->orden->varResponsable)->first();
+        $proveedor = Proveedor::where('idProveedores', $this->orden->varProveedor)->first();
+
+        $apiURL = "https://api.ultramsg.com/instance10658/messages/chat";
+        $postFields = [
+        'token' => "7eyim2lkk21gjrns",
+        'to' => "57".$responsable->telephone,
+        'body' => 'El proveedor '.$proveedor->varNombreRazon.' ha rechazado la orden '.$this->orden->varConsecutivo.' para revisar ingresa al siguiente link',
+        'link' => 'www.prismaap.com',
+        'priority' => "1",
+        'referenceId' => ''
+        ];
+        $headers = [
+            "Content-Type', 'text/plain"
+        ];
+
+        $response = Http::withHeaders($headers)->post($apiURL, $postFields);
+
         $this->orden->save();
         $this->accion = "";
     }

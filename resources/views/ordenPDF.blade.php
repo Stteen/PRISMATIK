@@ -133,6 +133,16 @@
         </table>
     </div>
     @endif
+
+    <div class="col-sm-12">
+        <b>Cantidad total: @php
+            foreach($orden->ordenDetalles as $item){
+                $cantidadTotal += $item->cantidad;
+            }
+            @endphp
+        </b>
+        <hr />
+    </div>
 </body>
 
 </html>
