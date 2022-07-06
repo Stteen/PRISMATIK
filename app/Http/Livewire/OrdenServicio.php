@@ -30,13 +30,14 @@ class OrdenServicio extends Component
         "orden.varProveedor" => "required",
         "orden.varTipoOrden" => "required",
         "orden.dtFechaEntrega" => "",
-        "orden.cambio_fecha" => "",
         "orden.varCliente" => "required",
+        "orden.cambio_fecha" => "",
         "productoOrden.varTipoProducto" => "",
         "productoOrden.cantidad" => "",
         "productoOrden.ref_entrada" => "",
         "productoOrden.ref_salida"=> "",
         "productoOrden.varPrecio" => "",
+        'productoOrden.*.malas' => "",
     ];
 
     /* Le damos un valor personalizado para los errores del formulario */
@@ -69,6 +70,7 @@ class OrdenServicio extends Component
     public function editarOrdenServicio($id){
         // Reseteamos los errores de validacion al entrar a la vista
         $this->resetValidation();
+      
         // Enviamos a la accion de la vista Formulario
         $this->accion = 'formOrdenServicio';
 
@@ -84,18 +86,17 @@ class OrdenServicio extends Component
     public function agregarProducto(){
         $this->productoOrdenes[] = $this->productoOrden;
         $this->productoOrden = [];
-
     }
 
-    // Elimina los valores que hayan sido agregados temporalmente como array
-    public function eliminaProducto($id){ 
-       unset($this->productoOrdenes[$id]);
-    }
-
-    // Elimina los valores que hayan sido agregados en la persistencia
-    public function eliminaProductos($id){ 
+     // Elimina los valores que hayan sido agregados en la persistencia
+     public function eliminaProductos($id){ 
         $producto = ordenDetalle::find($id);
         $producto->delete();
+        $this->editarOrdenServicio($this->orden->IdOrdenServicio);
+    }
+
+    public function eliminaProducto($id){ 
+        unset($this->productoOrden[$id]);
         $this->editarOrdenServicio($this->orden->IdOrdenServicio);
     }
 
@@ -111,7 +112,7 @@ class OrdenServicio extends Component
         $this->editarOrdenServicio($this->orden->IdOrdenServicio);
     }
 
-    // Funcion para insertar los valores de los productos seleccionados en la BD
+    // Funcion para insertar los valores en la BD
     public function guardaProductos(){
         if(isset($this->productoOrdenes)){
             foreach($this->productoOrdenes as $productoOrden){
@@ -126,7 +127,7 @@ class OrdenServicio extends Component
             }
             $this->orden = OrdenesServicio::where('IdOrdenServicio', $this->orden->IdOrdenServicio)->first();
             $this->orden->Estado = 'CREADO';
-
+            
             $proveedor = Proveedor::where('idProveedores', $this->orden->varProveedor)->first();
             
             $apiURL = "https://api.ultramsg.com/instance10658/messages/chat";
@@ -186,7 +187,7 @@ class OrdenServicio extends Component
                
             }
             $this->orden->varConsecutivo = $prefijo.str_pad($proximo,5,'0',STR_PAD_LEFT);
-
+            
             $proveedor = Proveedor::where('idProveedores', $this->orden->varProveedor)->first();
             
             $apiURL = "https://api.ultramsg.com/instance10658/messages/chat";
@@ -212,7 +213,6 @@ class OrdenServicio extends Component
     public function enviaProducto($id){
         $this->orden = OrdenesServicio::find($id);
         $this->orden->Estado = 'ENVIADO';
-        
         $proveedor = Proveedor::where('idProveedores', $this->orden->varProveedor)->first();
             
         $apiURL = "https://api.ultramsg.com/instance10658/messages/chat";
@@ -250,20 +250,41 @@ class OrdenServicio extends Component
 
     public function mount()
     {
-
     }
 
     public function imprimePDF($id){
         $orden = OrdenesServicio::find($id);
+
        $pdf =  PDF::loadView('ordenPDF', ['orden' => $orden])->stream('orden'.$orden->varConsecutivo.'.pdf');
        return response()->stream(function() use ($pdf) {
             echo $pdf;
         }, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="ordenPDF.pdf"',
+            'Content-Disposition' => 'inline; filename="ordenPDF_'.$orden->varConsecutivo.'.pdf"',
             'Content-Transfer-Encoding' => 'binary',
         ]);
+    }
+
+
+    public function agregaMalas($id){
+        $producto = OrdenDetalle::find($id);
+        foreach($this->productoOrden as $key => $mala) {
+        if($producto->malas == ""){
+            $producto->malas = $mala['malas']; 
+        }
+        else{
+            $producto->malas = $producto->malas + $mala['malas'];
+        }
+        }
+        $producto->save();
+        $this->verOrdenServicio($producto->orden_id);
+        $this->productoOrden = [];
      
-        
+    }
+
+    public function finalizaOrden(){
+        $this->orden->Estado = 'FINALIZADO';
+        $this->orden->save();
+        $this->accion = "";
     }
 }

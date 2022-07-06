@@ -122,7 +122,7 @@
                     <td>{{$item->cantidad}}</td>
                     <td>
                     @php
-                       $buenas = $item->cantidad - $item->malas;
+                       $buenas = $item->enviadas - $item->malas;
                     @endphp
                         {{$buenas}}
                     </td>
@@ -132,17 +132,9 @@
             </tbody>
         </table>
     </div>
+    
     @endif
 
-    <div class="col-sm-12">
-        <b>Cantidad total: @php
-            foreach($orden->ordenDetalles as $item){
-                $cantidadTotal += $item->cantidad;
-            }
-            @endphp
-        </b>
-        <hr />
-    </div>
 </body>
 
 </html>
