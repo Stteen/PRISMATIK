@@ -121,10 +121,13 @@
                     </td>
                     <td>{{$item->cantidad}}</td>
                     <td>
+                    
                     @php
                        $buenas = $item->enviadas - $item->malas;
                     @endphp
+
                         {{$buenas}}
+                        
                     </td>
                     <td>{{$item->malas?$item->malas:'0'}}</td>
                 </tr>

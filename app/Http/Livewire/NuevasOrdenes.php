@@ -94,7 +94,7 @@ class NuevasOrdenes extends Component
         return view('livewire.nuevas-ordenes', [
             'ordenes' => OrdenesServicio::where('Estado', 'CREADO')
             ->where('varProveedor', auth()->user()->proveedor_id)
-            ->paginate(10),
+            ->orderBy('IdOrdenServicio', 'DESC')->paginate(10),
         ]);
     }
 }

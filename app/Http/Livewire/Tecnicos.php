@@ -43,7 +43,7 @@ class Tecnicos extends Component
     public function render()
     {
         return view('livewire.tecnicos', [
-            'tecnicos' => Tecnico::paginate(10),
+            'tecnicos' => Tecnico::orderBy('IdTecnicos', 'DESC')->paginate(10),
         ]);
     }
 

@@ -92,7 +92,7 @@ class Productos extends Component
     {
   
         return view('livewire.productos', [
-            'productos' => Producto::paginate(5),
+            'productos' => Producto::orderBy('IdPortafolio', 'DESC')->paginate(10),
         ]);
     }
 

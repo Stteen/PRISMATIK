@@ -248,10 +248,11 @@
 
                             <div class="mb-3 col-md-4">
                                 <label class="form-label">Tipo de Orden *</label>
-                                <select type="selected" class="form-control" wire:model="orden.varTipoOrden">
-                                    <option> Seleccione...</option>
+                                <select class="form-control" wire:model="orden.varTipoOrden">
+                                    <option>Seleccione...</option>
                                     <option wire:key="Pedido">Pedido</option>
                                     <option wire:key="Muestra">Muestra</option>
+                                    <option wire:key="Garantia">Garantia</option>
                                 </select>
                                 @error('orden.varTipoOrden')
                                 <span class='text-danger'>{{ $message }}</span>

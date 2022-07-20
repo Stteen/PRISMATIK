@@ -295,6 +295,7 @@
                     </tbody>
                 </table>
                 <!-- Linea que coloca el paginador del listadpo -->
+                
             </div>
 
             @break
@@ -351,6 +352,7 @@
                     </tbody>
                 </table>
                 <!-- Linea que coloca el paginador del listadpo -->
+                {{ $ordenes->links() }}
             </div>
             @break
             @endswitch

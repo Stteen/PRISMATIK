@@ -61,7 +61,7 @@ class Zonas extends Component
     public function render()
     {
         return view('livewire.zonas', [
-            'zonas' => Zona::paginate(10),
+            'zonas' => Zona::orderBy('IdZonas', 'DESC')->paginate(10),
         ]);
     }
 }

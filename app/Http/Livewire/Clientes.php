@@ -123,7 +123,7 @@ class Clientes extends Component
     cliente*/
     public function render(){
         return view('livewire.clientes', [
-            'clientes' => Cliente::paginate(5),
+            'clientes' => Cliente::orderBy('IdClientes', 'DESC')->paginate(10),
         ]);
     }
 }

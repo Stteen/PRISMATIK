@@ -127,7 +127,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
+                            {{ $ordenes->links() }}
                         </div>
                     </div>
                     @break

@@ -102,6 +102,23 @@ class OrdenServicio extends Component
 
     public function Finalizar(){
         $this->orden->Estado = "FINALIZADO";
+        $proveedor = Proveedor::where('idProveedores', $this->orden->varProveedor)->first();
+            
+            $apiURL = "https://api.ultramsg.com/instance10658/messages/chat";
+            $postFields = [
+            'token' => "7eyim2lkk21gjrns",
+            'to' => "57".$proveedor->varTelefono,
+            'body' => 'Hola. valsan recibio La orden '.$this->orden->varConsecutivo.' y observado las novedades, se ha finalizado y cerrada 
+            para imprimir pdf de la orden ingrese al siguiente link: https://prismaapp.co/public/PDFProveedor/'.$this->orden->IdOrdenServicio,
+            'link' => 'https://www.prismaap.com/nuevasOrdenes',
+            'priority' => "1",
+            'referenceId' => ''
+            ];
+            $headers = [
+                "Content-Type', 'text/plain"
+            ];
+
+            $response = Http::withHeaders($headers)->post($apiURL, $postFields);
         $this->orden->save();
         $this->accion = "";
     }
@@ -173,6 +190,7 @@ class OrdenServicio extends Component
             switch($this->orden->varTipoOrden){
                 case 'Muestra': $prefijo =date('Y')."-OM"; break;
                 case 'Pedido': $prefijo =date('Y')."-OS"; break;
+                case 'Garantia': $prefijo =date('Y')."-OG"; break;
 
             }
             // Buscamos el último consecutivo dentro de las ordenes de servicio

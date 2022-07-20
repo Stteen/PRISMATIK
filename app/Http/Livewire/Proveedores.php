@@ -91,7 +91,7 @@ class Proveedores extends Component
     public function render()
     {
         return view('livewire.proveedores', [
-            'proveedores' => Proveedor::paginate(2),
+            'proveedores' => Proveedor::orderBy('IdProveedores', 'DESC')->paginate(10),
         ]);
     }
 
